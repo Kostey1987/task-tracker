@@ -28,7 +28,9 @@ export async function getTasks(
   userId: number,
   page: number,
   limit: number,
-  status?: string
+  status?: string,
+  deadlineFrom?: string,
+  deadlineTo?: string
 ) {
   const db = await getDb();
   const offset = (page - 1) * limit;
@@ -38,13 +40,34 @@ export async function getTasks(
     query += " AND status = ?";
     params.push(status);
   }
+  if (deadlineFrom) {
+    query += " AND deadline >= ?";
+    params.push(deadlineFrom);
+  }
+  if (deadlineTo) {
+    query += " AND deadline <= ?";
+    params.push(deadlineTo);
+  }
   query += " LIMIT ? OFFSET ?";
   params.push(limit, offset);
   const tasks = await db.all(query, params);
-  const total = await db.get(
-    "SELECT COUNT(*) as count FROM tasks WHERE user_id = ?",
-    [userId]
-  );
+
+  // Для корректного total учитываем фильтры
+  let countQuery = "SELECT COUNT(*) as count FROM tasks WHERE user_id = ?";
+  const countParams: any[] = [userId];
+  if (status) {
+    countQuery += " AND status = ?";
+    countParams.push(status);
+  }
+  if (deadlineFrom) {
+    countQuery += " AND deadline >= ?";
+    countParams.push(deadlineFrom);
+  }
+  if (deadlineTo) {
+    countQuery += " AND deadline <= ?";
+    countParams.push(deadlineTo);
+  }
+  const total = await db.get(countQuery, countParams);
   return {
     tasks,
     total: total.count,

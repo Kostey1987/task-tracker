@@ -16,9 +16,18 @@ export const getTasks = async (
   userId: number,
   page: number,
   limit: number,
-  status?: string
+  status?: string,
+  deadlineFrom?: string,
+  deadlineTo?: string
 ) => {
-  return getTasksModel(userId, page, limit, status);
+  return getTasksModel(
+    userId,
+    page,
+    limit,
+    status || undefined,
+    deadlineFrom || undefined,
+    deadlineTo || undefined
+  );
 };
 
 export const updateTask = async (taskId: number, updates: Partial<Task>) => {

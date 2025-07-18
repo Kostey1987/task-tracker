@@ -79,6 +79,11 @@ npm start           # Запуск собранного JS-кода из dist/
 - **GET /api/tasks** — получить список задач
   - Header: `Authorization: Bearer <accessToken>`
   - Query: `page`, `limit`, `status`
+  - Query: `page`, `limit`, `status`, `deadlineFrom`, `deadlineTo`
+    - `deadlineFrom` — (опционально) дата в формате ISO8601, фильтрует задачи с дедлайном >= этой даты
+    - `deadlineTo` — (опционально) дата в формате ISO8601, фильтрует задачи с дедлайном <= этой даты
+    - Можно использовать оба параметра или только один
+    - Пример: `/api/tasks?deadlineFrom=2024-06-01&deadlineTo=2024-06-30`
 - **PATCH /api/tasks/:id** — обновить задачу (можно заменить изображение)
   - Header: `Authorization: Bearer <accessToken>`
   - Body: `form-data`:
