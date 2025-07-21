@@ -18,7 +18,8 @@ export const getTasks = async (
   limit: number,
   status?: string,
   deadlineFrom?: string,
-  deadlineTo?: string
+  deadlineTo?: string,
+  sortDeadline?: "asc" | "desc"
 ) => {
   return getTasksModel(
     userId,
@@ -26,7 +27,8 @@ export const getTasks = async (
     limit,
     status || undefined,
     deadlineFrom || undefined,
-    deadlineTo || undefined
+    deadlineTo || undefined,
+    sortDeadline || undefined
   );
 };
 

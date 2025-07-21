@@ -32,8 +32,10 @@ router.post(
     body("description").notEmpty().withMessage("Description is required"),
     body("deadline")
       .optional()
-      .isISO8601()
-      .withMessage("Deadline must be a valid date"),
+      .isISO8601({ strict: true })
+      .withMessage(
+        "Deadline must be a valid date and time in format YYYY-MM-DDTHH:mm"
+      ),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -84,13 +86,15 @@ router.get("/", async (req, res) => {
     const status = req.query.status as string | undefined;
     const deadlineFrom = req.query.deadlineFrom as string | undefined;
     const deadlineTo = req.query.deadlineTo as string | undefined;
+    const sortDeadline = req.query.sortDeadline as "asc" | "desc" | undefined;
     const result = await tasksController.getTasks(
       req.userId,
       page,
       limit,
       status || undefined,
       deadlineFrom || undefined,
-      deadlineTo || undefined
+      deadlineTo || undefined,
+      sortDeadline
     );
     res.json(result);
   } catch (err: any) {
@@ -112,8 +116,10 @@ router.patch(
       .withMessage("Invalid status"),
     body("deadline")
       .optional()
-      .isISO8601()
-      .withMessage("Deadline must be a valid date"),
+      .isISO8601({ strict: true })
+      .withMessage(
+        "Deadline must be a valid date and time in format YYYY-MM-DDTHH:mm"
+      ),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);

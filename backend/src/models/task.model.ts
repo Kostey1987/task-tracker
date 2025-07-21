@@ -4,6 +4,9 @@ export interface Task {
   id?: number;
   description: string;
   status?: string;
+  /**
+   * Дата и время дедлайна в формате YYYY-MM-DDTHH:mm (ISO 8601, без секунд)
+   */
   deadline?: string;
   image?: string;
   userId: number;
@@ -30,7 +33,8 @@ export async function getTasks(
   limit: number,
   status?: string,
   deadlineFrom?: string,
-  deadlineTo?: string
+  deadlineTo?: string,
+  sortDeadline?: "asc" | "desc"
 ) {
   const db = await getDb();
   const offset = (page - 1) * limit;
@@ -47,6 +51,11 @@ export async function getTasks(
   if (deadlineTo) {
     query += " AND deadline <= ?";
     params.push(deadlineTo);
+  }
+  if (sortDeadline === "asc") {
+    query += " ORDER BY deadline ASC";
+  } else if (sortDeadline === "desc") {
+    query += " ORDER BY deadline DESC";
   }
   query += " LIMIT ? OFFSET ?";
   params.push(limit, offset);

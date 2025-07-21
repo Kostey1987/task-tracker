@@ -74,16 +74,19 @@ npm start           # Запуск собранного JS-кода из dist/
   - Header: `Authorization: Bearer <accessToken>`
   - Body: `form-data`:
     - `description`: string (обязательно)
-    - `deadline`: string (опционально, ISO8601)
+    - `deadline`: string (опционально, формат YYYY-MM-DDTHH:mm)
     - `image`: файл (опционально, изображение)
 - **GET /api/tasks** — получить список задач
   - Header: `Authorization: Bearer <accessToken>`
-  - Query: `page`, `limit`, `status`
   - Query: `page`, `limit`, `status`, `deadlineFrom`, `deadlineTo`
-    - `deadlineFrom` — (опционально) дата в формате ISO8601, фильтрует задачи с дедлайном >= этой даты
-    - `deadlineTo` — (опционально) дата в формате ISO8601, фильтрует задачи с дедлайном <= этой даты
+    - `deadlineFrom` — (опционально) дата и время в формате YYYY-MM-DDTHH:mm (ISO 8601), фильтрует задачи с дедлайном >= этой даты и времени
+    - `deadlineTo` — (опционально) дата и время в формате YYYY-MM-DDTHH:mm (ISO 8601), фильтрует задачи с дедлайном <= этой даты и времени
     - Можно использовать оба параметра или только один
-    - Пример: `/api/tasks?deadlineFrom=2024-06-01&deadlineTo=2024-06-30`
+    - Пример: `/api/tasks?deadlineFrom=2024-06-01T09:00&deadlineTo=2024-06-30T18:00`
+  - Query: `sortDeadline` (опционально)
+    - `sortDeadline=asc` — сортировать задачи по дедлайну по возрастанию (сначала ближайшие)
+    - `sortDeadline=desc` — сортировать задачи по дедлайну по убыванию (сначала самые поздние)
+    - Пример: `/api/tasks?sortDeadline=asc`
 - **PATCH /api/tasks/:id** — обновить задачу (можно заменить изображение)
   - Header: `Authorization: Bearer <accessToken>`
   - Body: `form-data`:
