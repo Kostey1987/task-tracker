@@ -11,9 +11,11 @@ export const tasksApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getTasks: builder.query<GetTasksResponse, void>({
       query: () => "/tasks",
+      providesTags: ["Tasks"],
     }),
     getTask: builder.query<Task, number>({
       query: (id) => `/tasks/${id}`,
+      providesTags: (result, error, id) => [{ type: "Tasks", id }],
     }),
     createTask: builder.mutation<CreateTaskResponse, TaskInput>({
       query: (body) => ({
@@ -21,6 +23,7 @@ export const tasksApi = api.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Tasks"],
     }),
     updateTask: builder.mutation<
       MessageResponse,
@@ -31,12 +34,17 @@ export const tasksApi = api.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: (result, error, { id }) => [
+        "Tasks",
+        { type: "Tasks", id },
+      ],
     }),
     deleteTask: builder.mutation<MessageResponse, number>({
       query: (id) => ({
         url: `/tasks/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: (result, error, id) => ["Tasks", { type: "Tasks", id }],
     }),
   }),
   overrideExisting: false,

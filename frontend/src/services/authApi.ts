@@ -9,6 +9,7 @@ export const authApi = api.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Profile"],
     }),
     register: builder.mutation<AuthResponse, RegisterInput>({
       query: (body) => ({
@@ -28,9 +29,11 @@ export const authApi = api.injectEndpoints({
         url: "/auth/logout",
         method: "POST",
       }),
+      invalidatesTags: ["Profile"],
     }),
     getProfile: builder.query<User, void>({
       query: () => "/auth/profile",
+      providesTags: ["Profile"],
     }),
     updateUser: builder.mutation<{ message: string }, { newName: string }>({
       query: (body) => ({
@@ -38,6 +41,7 @@ export const authApi = api.injectEndpoints({
         method: "PATCH",
         body,
       }),
+      invalidatesTags: ["Profile"],
     }),
   }),
   overrideExisting: false,
