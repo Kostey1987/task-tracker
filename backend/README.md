@@ -64,6 +64,9 @@ npm start           # Запуск собранного JS-кода из dist/
 
 ### Пользователь
 
+- **GET /api/auth/profile** — получить профиль текущего пользователя
+  - Header: `Authorization: Bearer <accessToken>`
+  - Ответ: `{ id, name, email }`
 - **PATCH /api/auth/update** — обновить имя пользователя
   - Header: `Authorization: Bearer <accessToken>`
   - Body: `{ "newName": string }`

@@ -9,7 +9,12 @@ import rateLimit from "express-rate-limit";
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 
 // Rate limiting

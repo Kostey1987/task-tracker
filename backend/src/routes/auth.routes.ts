@@ -9,6 +9,7 @@ import { authMiddleware } from "../middlewares/auth.middleware";
 import { body, validationResult } from "express-validator";
 import { getUserByRefreshToken } from "../models/user.model";
 import jwt from "jsonwebtoken";
+import { findUserById } from "../models/user.model";
 
 const router = Router();
 
@@ -86,6 +87,20 @@ router.post("/refresh", async (req: Request, res: Response) => {
     expiresIn: "15m",
   });
   res.json({ accessToken });
+});
+
+// Профиль пользователя
+router.get("/profile", authMiddleware, async (req: any, res: Response) => {
+  try {
+    const user = await findUserById(req.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const { password, ...userData } = user;
+    res.json(userData);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 export default router;
