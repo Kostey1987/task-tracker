@@ -28,14 +28,19 @@ const baseQueryWithReauth: BaseQueryFn<
 
   if (result.error && result.error.status === 401) {
     // Попытка обновить токен
+    const refreshToken = (api.getState() as RootState).auth.refreshToken;
     const refreshResult = await baseQuery(
-      { url: "/auth/refresh", method: "POST" },
+      {
+        url: "/auth/refresh",
+        method: "POST",
+        body: { refreshToken },
+      },
       api,
       extraOptions
     );
     if (refreshResult.data) {
-      const { accessToken, refreshToken, user } = refreshResult.data as any;
-      api.dispatch(setCredentials({ accessToken, refreshToken, user }));
+      const { accessToken, refreshToken } = refreshResult.data as any;
+      api.dispatch(setCredentials({ accessToken, refreshToken }));
       // Повторяем исходный запрос
       result = await baseQuery(args, api, extraOptions);
     } else {
