@@ -2,6 +2,13 @@ import { Button, Paper, Stack, Title, Flex } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler, RegisterOptions } from "react-hook-form";
 import { TextInputField } from "../components/form/TextInputField";
+import {
+  useLogoutMutation,
+  useUpdateUserMutation,
+  useGetProfileQuery,
+} from "../services/authApi";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo } from "react";
 
 interface ProfileFormValues {
   name: string;
@@ -13,14 +20,48 @@ const nameRules: RegisterOptions<ProfileFormValues> = {
 };
 
 export default function UserProfilePage() {
-  const { control, handleSubmit } = useForm<ProfileFormValues>({
+  const { data: user, refetch } = useGetProfileQuery();
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { isDirty },
+  } = useForm<ProfileFormValues>({
     mode: "onTouched",
-    defaultValues: { name: "" }, // Можно подставить текущее имя пользователя
+    defaultValues: { name: user?.name || "" },
   });
+  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+  const [updateUser, { isLoading: isUpdating, error: updateError, isSuccess }] =
+    useUpdateUserMutation();
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<ProfileFormValues> = (data) => {
-    // логика обновления имени пользователя
-    console.log("Новое имя:", data.name);
+  const currentName = watch("name");
+  const isNameChanged = useMemo(
+    () => currentName !== user?.name,
+    [currentName, user?.name]
+  );
+
+  useEffect(() => {
+    if (user) reset({ name: user.name });
+  }, [user, reset]);
+
+  const onSubmit: SubmitHandler<ProfileFormValues> = async (data) => {
+    try {
+      await updateUser({ newName: data.name }).unwrap();
+      refetch();
+    } catch (e) {
+      // обработка ошибки
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      navigate("/login");
+    } catch (e) {
+      // обработка ошибки
+    }
   };
 
   return (
@@ -39,8 +80,30 @@ export default function UserProfilePage() {
               rules={nameRules}
               autoComplete="off"
             />
-            <Button type="submit" fullWidth mt="md">
+            <Button
+              type="submit"
+              fullWidth
+              mt="md"
+              loading={isUpdating}
+              disabled={!isNameChanged || !isDirty}
+            >
               Сохранить
+            </Button>
+            {isSuccess && (
+              <div style={{ color: "green" }}>Имя успешно обновлено</div>
+            )}
+            {updateError && (
+              <div style={{ color: "red" }}>Ошибка обновления</div>
+            )}
+            <Button
+              type="button"
+              color="red"
+              fullWidth
+              mt="md"
+              onClick={handleLogout}
+              loading={isLoggingOut}
+            >
+              Выйти
             </Button>
           </Stack>
         </form>

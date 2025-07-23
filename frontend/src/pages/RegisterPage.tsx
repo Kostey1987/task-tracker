@@ -2,6 +2,8 @@ import { Button, Paper, Stack, Title, Flex } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler, RegisterOptions } from "react-hook-form";
 import { TextInputField } from "../components/form/TextInputField";
+import { useRegisterMutation } from "../services/authApi";
+import { useNavigate } from "react-router-dom";
 
 interface RegisterFormValues {
   name: string;
@@ -15,10 +17,20 @@ export default function RegisterPage() {
     mode: "onTouched",
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
   });
+  const [registerUser, { isLoading, error }] = useRegisterMutation();
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
-    // логика регистрации
-    console.log(data);
+  const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
+    try {
+      await registerUser({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+      navigate("/login");
+    } catch (e) {
+      // обработка ошибки
+    }
   };
 
   const nameRules: RegisterOptions<RegisterFormValues> = {
@@ -86,9 +98,10 @@ export default function RegisterPage() {
               placeholder="Повторите пароль"
               rules={confirmPasswordRules}
             />
-            <Button type="submit" fullWidth mt="md">
+            <Button type="submit" fullWidth mt="md" loading={isLoading}>
               Зарегистрироваться
             </Button>
+            {error && <div style={{ color: "red" }}>Ошибка регистрации</div>}
           </Stack>
         </form>
       </Paper>

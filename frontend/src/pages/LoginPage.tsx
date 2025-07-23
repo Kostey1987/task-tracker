@@ -2,6 +2,10 @@ import { Button, Paper, Stack, Title, Flex } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler, RegisterOptions } from "react-hook-form";
 import { TextInputField } from "../components/form/TextInputField";
+import { useLoginMutation } from "../services/authApi";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../store/authSlice";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormValues {
   email: string;
@@ -29,10 +33,23 @@ export default function LoginPage() {
     mode: "onTouched",
     defaultValues: { email: "", password: "" },
   });
+  const [login, { isLoading, error }] = useLoginMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
-    // логика логина
-    console.log(data);
+  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+    try {
+      const result = await login(data).unwrap();
+      dispatch(
+        setCredentials({
+          accessToken: result.token.accessToken,
+          refreshToken: result.token.refreshToken,
+        })
+      );
+      navigate("/userProfile");
+    } catch (e) {
+      // обработка ошибки
+    }
   };
 
   return (
@@ -61,9 +78,10 @@ export default function LoginPage() {
               rules={passwordRules}
               autoComplete="new-password"
             />
-            <Button type="submit" fullWidth mt="md">
+            <Button type="submit" fullWidth mt="md" loading={isLoading}>
               Войти
             </Button>
+            {error && <div style={{ color: "red" }}>Ошибка входа</div>}
           </Stack>
         </form>
       </Paper>

@@ -32,6 +32,13 @@ export const authApi = api.injectEndpoints({
     getProfile: builder.query<User, void>({
       query: () => "/auth/profile",
     }),
+    updateUser: builder.mutation<{ message: string }, { newName: string }>({
+      query: (body) => ({
+        url: "/auth/update",
+        method: "PATCH",
+        body,
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -42,4 +49,5 @@ export const {
   useRefreshMutation,
   useLogoutMutation,
   useGetProfileQuery,
+  useUpdateUserMutation,
 } = authApi;

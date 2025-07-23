@@ -17,9 +17,10 @@ export interface Task {
 
 // Ответ авторизации/refresh
 export interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
+  token: {
+    accessToken: string;
+    refreshToken: string;
+  };
 }
 
 // Входные данные для задач
@@ -41,4 +42,19 @@ export interface RegisterInput {
 export interface LoginInput {
   email: string;
   password: string;
+}
+
+export interface GetTasksResponse {
+  tasks: Task[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
+export interface CreateTaskResponse {
+  id: number;
+}
+
+export interface MessageResponse {
+  message: string;
 }

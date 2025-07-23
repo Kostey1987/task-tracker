@@ -1,15 +1,21 @@
 import { api } from "./api";
-import type { Task, TaskInput } from "../types";
+import type {
+  Task,
+  TaskInput,
+  GetTasksResponse,
+  CreateTaskResponse,
+  MessageResponse,
+} from "../types";
 
 export const tasksApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTasks: builder.query<Task[], void>({
+    getTasks: builder.query<GetTasksResponse, void>({
       query: () => "/tasks",
     }),
     getTask: builder.query<Task, number>({
       query: (id) => `/tasks/${id}`,
     }),
-    createTask: builder.mutation<Task, TaskInput>({
+    createTask: builder.mutation<CreateTaskResponse, TaskInput>({
       query: (body) => ({
         url: "/tasks",
         method: "POST",
@@ -17,7 +23,7 @@ export const tasksApi = api.injectEndpoints({
       }),
     }),
     updateTask: builder.mutation<
-      Task,
+      MessageResponse,
       { id: number; data: Partial<TaskInput> }
     >({
       query: ({ id, data }) => ({
@@ -26,7 +32,7 @@ export const tasksApi = api.injectEndpoints({
         body: data,
       }),
     }),
-    deleteTask: builder.mutation<{ success: boolean }, number>({
+    deleteTask: builder.mutation<MessageResponse, number>({
       query: (id) => ({
         url: `/tasks/${id}`,
         method: "DELETE",
