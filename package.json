@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@tabler/icons-react": "^3.34.1",
     "express-validator": "^7.2.1"
   }
 }

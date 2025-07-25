@@ -19,7 +19,8 @@ export const getTasks = async (
   status?: string,
   deadlineFrom?: string,
   deadlineTo?: string,
-  sortDeadline?: "asc" | "desc"
+  sortDeadline?: "asc" | "desc",
+  search?: string
 ) => {
   return getTasksModel(
     userId,
@@ -28,7 +29,8 @@ export const getTasks = async (
     status || undefined,
     deadlineFrom || undefined,
     deadlineTo || undefined,
-    sortDeadline || undefined
+    sortDeadline || undefined,
+    search
   );
 };
 

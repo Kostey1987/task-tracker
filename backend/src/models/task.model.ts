@@ -34,7 +34,8 @@ export async function getTasks(
   status?: string,
   deadlineFrom?: string,
   deadlineTo?: string,
-  sortDeadline?: "asc" | "desc"
+  sortDeadline?: "asc" | "desc",
+  search?: string
 ) {
   const db = await getDb();
   const offset = (page - 1) * limit;
@@ -51,6 +52,10 @@ export async function getTasks(
   if (deadlineTo) {
     query += " AND deadline <= ?";
     params.push(deadlineTo);
+  }
+  if (search) {
+    query += " AND description LIKE ?";
+    params.push(`%${search}%`);
   }
   if (sortDeadline === "asc") {
     query += " ORDER BY deadline ASC";
@@ -75,6 +80,10 @@ export async function getTasks(
   if (deadlineTo) {
     countQuery += " AND deadline <= ?";
     countParams.push(deadlineTo);
+  }
+  if (search) {
+    countQuery += " AND description LIKE ?";
+    countParams.push(`%${search}%`);
   }
   const total = await db.get(countQuery, countParams);
   return {

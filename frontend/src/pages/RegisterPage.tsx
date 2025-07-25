@@ -102,6 +102,14 @@ export default function RegisterPage() {
               Зарегистрироваться
             </Button>
             {error && <div style={{ color: "red" }}>Ошибка регистрации</div>}
+            <div style={{ textAlign: "center", marginTop: 16 }}>
+              <a
+                href="/login"
+                style={{ color: "#228be6", textDecoration: "none" }}
+              >
+                Уже есть аккаунт? Войти
+              </a>
+            </div>
           </Stack>
         </form>
       </Paper>

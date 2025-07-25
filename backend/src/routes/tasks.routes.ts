@@ -87,6 +87,7 @@ router.get("/", async (req, res) => {
     const deadlineFrom = req.query.deadlineFrom as string | undefined;
     const deadlineTo = req.query.deadlineTo as string | undefined;
     const sortDeadline = req.query.sortDeadline as "asc" | "desc" | undefined;
+    const search = req.query.search as string | undefined;
     const result = await tasksController.getTasks(
       req.userId,
       page,
@@ -94,7 +95,8 @@ router.get("/", async (req, res) => {
       status || undefined,
       deadlineFrom || undefined,
       deadlineTo || undefined,
-      sortDeadline
+      sortDeadline,
+      search
     );
     res.json(result);
   } catch (err: any) {

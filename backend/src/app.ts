@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.routes";
 import tasksRoutes from "./routes/tasks.routes";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import rateLimit from "express-rate-limit";
+import path from "path";
 
 const app = express();
 
@@ -19,12 +20,15 @@ app.use(bodyParser.json());
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 минут
-  max: 100, // максимум 100 запросов с одного IP
+  windowMs: 1 * 60 * 1000, // 1 минута
+  max: 10000, // максимум 10000 запросов с одного IP
   standardHeaders: true,
   legacyHeaders: false,
 });
 app.use(limiter);
+
+// Раздача статики для изображений
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Routes
 app.use("/api/auth", authRoutes);

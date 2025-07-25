@@ -1,0 +1,229 @@
+import { useState } from "react";
+import {
+  useGetTasksQuery,
+  useCreateTaskMutation,
+  useUpdateTaskMutation,
+  useDeleteTaskMutation,
+} from "../services/tasksApi";
+import { TaskCard } from "../components/TaskCard";
+import type { TaskStatus } from "../components/TaskCard";
+import {
+  Stack,
+  Title,
+  Loader,
+  Center,
+  Alert,
+  Text,
+  Button,
+  Group,
+  Select,
+  TextInput,
+  Pagination,
+} from "@mantine/core";
+import { DateInput } from "@mantine/dates";
+import { IconAlertCircle, IconPlus } from "@tabler/icons-react";
+import dayjs from "dayjs";
+
+const STATUS_OPTIONS: TaskStatus[] = ["В работе", "Готово", "Просрочено"];
+
+export default function TasksPage() {
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
+  const [status, setStatus] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [sortDeadline, setSortDeadline] = useState<"asc" | "desc">("asc");
+  const [isCreatingCard, setIsCreatingCard] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  const { data, isLoading, error, refetch } = useGetTasksQuery({
+    page,
+    limit,
+    status: status || undefined,
+    search: search || undefined,
+    sortDeadline: sortDeadline,
+  });
+  const [createTask, { isLoading: isCreating }] = useCreateTaskMutation();
+  const [updateTask] = useUpdateTaskMutation();
+  const [deleteTask] = useDeleteTaskMutation();
+
+  const handleCreate = async (
+    values: Partial<{
+      description: string;
+      status: TaskStatus;
+      image?: string;
+      deadline?: string;
+      file?: File | null;
+    }>
+  ) => {
+    if (!values.description?.trim() || !values.status) return;
+    try {
+      const taskData: any = {
+        description: values.description.trim(),
+        status: values.status,
+        deadline: values.deadline,
+      };
+      if (values.file) {
+        taskData.file = values.file;
+      } else if (values.image) {
+        taskData.image = values.image;
+      }
+      console.log("handleCreate: отправляемые данные:", taskData);
+      const result = await createTask(taskData).unwrap();
+      setIsCreatingCard(false);
+    } catch (error) {
+      console.error("Ошибка создания задачи:", error);
+      console.error("Failed to create task:", error);
+    }
+  };
+
+  const handleEdit = async (
+    id: number,
+    values: Partial<{
+      description: string;
+      status: TaskStatus;
+      image?: string;
+      deadline?: string;
+      file?: File | null;
+    }>
+  ) => {
+    const task = data?.tasks.find((t) => t.id === id);
+    if (!task) return;
+    const updateData: any = {
+      description: values.description ?? task.description,
+      status: values.status ?? task.status,
+      deadline: values.deadline ?? task.deadline,
+    };
+    if (values.file) {
+      updateData.file = values.file;
+    } else if (values.image) {
+      updateData.image = values.image;
+    }
+    console.log("handleEdit: отправляемые данные:", updateData);
+    try {
+      await updateTask({
+        id,
+        data: updateData,
+      }).unwrap();
+      setEditingId(null);
+      refetch();
+    } catch (error) {
+      console.error("Ошибка редактирования задачи:", error);
+      // ...
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    await deleteTask(id).unwrap();
+    refetch();
+  };
+
+  if (isLoading) {
+    return (
+      <Center h="100vh">
+        <Loader />
+      </Center>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert icon={<IconAlertCircle size={16} />} color="red">
+        Ошибка загрузки задач
+      </Alert>
+    );
+  }
+
+  return (
+    <Stack p="xl" maw={700} mx="auto">
+      <Title order={2} style={{ textAlign: "center" }} mb="md">
+        Список задач
+      </Title>
+      <Group mb="md" gap="md" wrap="wrap">
+        <Select
+          label="Статус"
+          data={[
+            { value: "", label: "Все" },
+            ...STATUS_OPTIONS.map((s) => ({ value: s, label: s })),
+          ]}
+          value={status || ""}
+          onChange={(v) => setStatus(v || null)}
+          style={{ minWidth: 120 }}
+        />
+        <Select
+          label="Сортировка по дедлайну"
+          data={[
+            { value: "asc", label: "По возрастанию" },
+            { value: "desc", label: "По убыванию" },
+          ]}
+          value={sortDeadline}
+          onChange={(v) => setSortDeadline((v as "asc" | "desc") || "asc")}
+          style={{ minWidth: 180 }}
+        />
+        <TextInput
+          label="Поиск"
+          placeholder="Описание..."
+          value={search}
+          onChange={(e) => setSearch(e.currentTarget.value)}
+        />
+        <Button
+          leftSection={<IconPlus size={16} />}
+          onClick={() => setIsCreatingCard(true)}
+          disabled={isCreatingCard}
+        >
+          Новая задача
+        </Button>
+      </Group>
+      {isCreatingCard && (
+        <TaskCard
+          description=""
+          status={"В работе"}
+          isCreating={true}
+          onChange={async (values) => {
+            if (!values.description || values.description.trim() === "") {
+              setIsCreatingCard(false);
+            } else if (values.description && values.status) {
+              await handleCreate(values);
+            }
+          }}
+        />
+      )}
+      {data?.tasks.length ? (
+        data.tasks.map((task) => (
+          <TaskCard
+            id={task.id}
+            description={task.description}
+            status={task.status as TaskStatus}
+            deadline={task.deadline}
+            image={task.image}
+            isEditing={editingId === task.id}
+            onEditClick={() => setEditingId(task.id!)}
+            onCancelEdit={() => setEditingId(null)}
+            onImageDeleted={() => refetch()}
+            onChange={
+              editingId === task.id
+                ? async (values) => {
+                    await handleEdit(task.id!, values);
+                  }
+                : undefined
+            }
+            onDelete={() => handleDelete(task.id!)}
+          />
+        ))
+      ) : (
+        <Center>
+          <Text color="dimmed" size="lg">
+            Нет задач
+          </Text>
+        </Center>
+      )}
+      {data && data.totalPages > 1 && (
+        <Pagination
+          value={page}
+          onChange={setPage}
+          total={data.totalPages}
+          mt="md"
+        />
+      )}
+    </Stack>
+  );
+}

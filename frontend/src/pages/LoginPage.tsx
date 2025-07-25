@@ -46,7 +46,7 @@ export default function LoginPage() {
           refreshToken: result.token.refreshToken,
         })
       );
-      navigate("/userProfile");
+      navigate("/tasks"); // редирект на страницу задач
     } catch (e) {
       // обработка ошибки
     }
@@ -82,6 +82,14 @@ export default function LoginPage() {
               Войти
             </Button>
             {error && <div style={{ color: "red" }}>Ошибка входа</div>}
+            <div style={{ textAlign: "center", marginTop: 16 }}>
+              <a
+                href="/register"
+                style={{ color: "#228be6", textDecoration: "none" }}
+              >
+                Нет аккаунта? Зарегистрироваться
+              </a>
+            </div>
           </Stack>
         </form>
       </Paper>
