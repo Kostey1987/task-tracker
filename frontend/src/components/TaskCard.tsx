@@ -284,6 +284,11 @@ export function TaskCard({
             )}
           </Stack>
         )}
+        {!currentImage && (isCreating || isEditing) && imageError && (
+          <Text color="red" size="sm" style={{ textAlign: "center" }}>
+            {imageError}
+          </Text>
+        )}
         {(isCreating || isEditing) && (
           <FileButton onChange={handleFileChange} accept="image/*">
             {(props) => (
