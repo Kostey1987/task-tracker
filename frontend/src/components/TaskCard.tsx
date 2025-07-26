@@ -14,7 +14,15 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { IconEdit, IconCheck, IconPhoto, IconTrash } from "@tabler/icons-react";
+import {
+  IconEdit,
+  IconCheck,
+  IconPhoto,
+  IconTrash,
+  IconClock,
+  IconCircleCheck,
+  IconAlertTriangle,
+} from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { DatePickerInput } from "@mantine/dates";
 import { useDeleteTaskImageMutation } from "../services/tasksApi";
@@ -195,17 +203,76 @@ export function TaskCard({
     }
   };
 
+  // Функция для определения стилей карточки в зависимости от статуса
+  const getCardStyles = () => {
+    switch (currentStatus) {
+      case "Готово":
+        return {
+          borderColor: "var(--mantine-color-green-4)",
+          borderWidth: 2,
+          backgroundColor: "var(--mantine-color-green-0)",
+        };
+      case "Просрочено":
+        return {
+          borderColor: "var(--mantine-color-red-4)",
+          borderWidth: 2,
+          backgroundColor: "var(--mantine-color-red-0)",
+        };
+      case "В работе":
+      default:
+        return {
+          borderColor: "var(--mantine-color-yellow-4)",
+          borderWidth: 2,
+          backgroundColor: "var(--mantine-color-yellow-0)",
+        };
+    }
+  };
+
+  // Функция для получения иконки статуса
+  const getStatusIcon = () => {
+    switch (currentStatus) {
+      case "Готово":
+        return <IconCircleCheck size={16} />;
+      case "Просрочено":
+        return <IconAlertTriangle size={16} />;
+      case "В работе":
+      default:
+        return <IconClock size={16} />;
+    }
+  };
+
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder pos="relative">
+    <Card
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+      pos="relative"
+      style={{
+        ...getCardStyles(),
+        transition: "all 0.2s ease",
+        "&:hover": {
+          transform: "translateY(-2px)",
+          boxShadow: "var(--mantine-shadow-lg)",
+        },
+      }}
+    >
       {onDelete && (
         <Button
           variant="subtle"
           color="red"
           size="xs"
           pos="absolute"
-          top={2}
-          right={2}
-          style={{ zIndex: 3 }}
+          top={8}
+          right={8}
+          style={{
+            zIndex: 3,
+            opacity: 0.7,
+            transition: "opacity 0.2s ease",
+            "&:hover": {
+              opacity: 1,
+            },
+          }}
           onClick={onDelete}
         >
           <IconTrash size={18} />
@@ -221,6 +288,7 @@ export function TaskCard({
                 ? "red"
                 : "yellow"
             }
+            leftSection={getStatusIcon()}
           >
             {currentStatus}
           </Badge>
@@ -234,14 +302,24 @@ export function TaskCard({
               allowDeselect={false}
               size="xs"
               w={130}
+              mr={50}
             />
           )}
         </Group>
         {!(isCreating || isEditing) && (
-          <Text color="dimmed" size="sm">
+          <Text
+            color={
+              currentStatus === "Просрочено"
+                ? "red"
+                : currentStatus === "Готово"
+                ? "green"
+                : "dimmed"
+            }
+            size="sm"
+            fw={currentStatus === "Просрочено" ? 600 : 400}
+          >
             Дедлайн:{" "}
-            {deadline ? dayjs(deadline).format("DD.MM.YYYY HH:mm") : "-"}{" "}
-            (debug: {deadlineInput})
+            {deadline ? dayjs(deadline).format("DD.MM.YYYY HH:mm") : "-"}
           </Text>
         )}
         {(isCreating || isEditing) && (
@@ -363,6 +441,13 @@ export function TaskCard({
             </Text>
             <Button
               variant="subtle"
+              color={
+                currentStatus === "Просрочено"
+                  ? "red"
+                  : currentStatus === "Готово"
+                  ? "green"
+                  : "yellow"
+              }
               size={isMobile ? "xs" : "sm"}
               leftSection={<IconEdit size={isMobile ? 14 : 16} />}
               onClick={onEditClick}
