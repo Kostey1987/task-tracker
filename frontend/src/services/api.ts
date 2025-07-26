@@ -27,24 +27,52 @@ const baseQueryWithReauth: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions);
 
   if (result.error && result.error.status === 401) {
-    // Попытка обновить токен
-    const refreshToken = (api.getState() as RootState).auth.refreshToken;
-    const refreshResult = await baseQuery(
-      {
-        url: "/auth/refresh",
-        method: "POST",
-        body: { refreshToken },
-      },
-      api,
-      extraOptions
-    );
-    if (refreshResult.data) {
-      const { accessToken, refreshToken } = refreshResult.data as any;
-      api.dispatch(setCredentials({ accessToken, refreshToken }));
-      // Повторяем исходный запрос
-      result = await baseQuery(args, api, extraOptions);
+    // Защита от бесконечных циклов - проверяем, не является ли это уже запросом refresh
+    const isRefreshRequest =
+      typeof args === "object" && args.url === "/auth/refresh";
+
+    if (!isRefreshRequest) {
+      // Попытка обновить токен
+      const refreshToken = (api.getState() as RootState).auth.refreshToken;
+
+      console.log("Attempting to refresh token...", {
+        refreshToken: refreshToken ? "exists" : "missing",
+      });
+
+      if (refreshToken) {
+        const refreshResult = await baseQuery(
+          {
+            url: "/auth/refresh",
+            method: "POST",
+            body: { refreshToken },
+          },
+          api,
+          extraOptions
+        );
+
+        console.log("Refresh result:", refreshResult);
+
+        if (refreshResult.data) {
+          const { accessToken, refreshToken: newRefreshToken } =
+            refreshResult.data as any;
+          console.log("Token refreshed successfully");
+          api.dispatch(
+            setCredentials({ accessToken, refreshToken: newRefreshToken })
+          );
+          // Повторяем исходный запрос
+          result = await baseQuery(args, api, extraOptions);
+        } else {
+          // Refresh не удался - выходим из системы
+          console.log("Refresh failed, logging out");
+          api.dispatch(logout());
+        }
+      } else {
+        // Нет refresh token - выходим из системы
+        console.log("No refresh token, logging out");
+        api.dispatch(logout());
+      }
     } else {
-      api.dispatch(logout());
+      console.log("This is a refresh request, not attempting to refresh again");
     }
   }
   return result;

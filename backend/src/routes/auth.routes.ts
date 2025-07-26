@@ -4,11 +4,10 @@ import {
   login,
   updateUser,
   logout,
+  refresh,
 } from "../controllers/auth.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { body, validationResult } from "express-validator";
-import { getUserByRefreshToken } from "../models/user.model";
-import jwt from "jsonwebtoken";
 import { findUserById } from "../models/user.model";
 
 const router = Router();
@@ -79,14 +78,12 @@ router.post("/refresh", async (req: Request, res: Response) => {
   if (!refreshToken) {
     return res.status(400).json({ error: "Refresh token required" });
   }
-  const user = await getUserByRefreshToken(refreshToken);
-  if (!user) {
-    return res.status(401).json({ error: "Invalid refresh token" });
+  try {
+    const tokens = await refresh(refreshToken);
+    res.json(tokens);
+  } catch (error: any) {
+    res.status(401).json({ error: error.message });
   }
-  const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-    expiresIn: "15m",
-  });
-  res.json({ accessToken });
 });
 
 // Профиль пользователя

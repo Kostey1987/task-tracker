@@ -4,6 +4,7 @@ import {
   updateUser as updateUserModel,
   saveRefreshToken,
   removeRefreshToken,
+  getUserByRefreshToken,
 } from "../models/user.model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -40,4 +41,21 @@ export const updateUser = async (userId: number, newName: string) => {
 
 export const logout = async (userId: number) => {
   await removeRefreshToken(userId);
+};
+
+export const refresh = async (refreshToken: string) => {
+  const user = await getUserByRefreshToken(refreshToken);
+  if (!user) {
+    throw new Error("Invalid refresh token");
+  }
+
+  const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+    expiresIn: "15s",
+  });
+
+  // Генерируем новый refresh token для ротации
+  const newRefreshToken = generateRefreshToken();
+  await saveRefreshToken(user.id, newRefreshToken);
+
+  return { accessToken, refreshToken: newRefreshToken };
 };
