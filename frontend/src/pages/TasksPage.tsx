@@ -154,7 +154,16 @@ export default function TasksPage() {
   }
 
   return (
-    <Stack p="xl" maw={700} mx="auto">
+    <Stack
+      p="xl"
+      maw={700}
+      mx="auto"
+      bg="var(--mantine-color-white)"
+      style={{
+        borderRadius: "var(--mantine-radius-md)",
+        boxShadow: "var(--mantine-shadow-sm)",
+      }}
+    >
       <Title order={2} ta="center" mb="md">
         Список задач
       </Title>

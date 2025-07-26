@@ -64,6 +64,11 @@ export default function UserProfilePage() {
       maw={700}
       mx="auto"
       mt={isMobile ? "md" : "xl"}
+      bg="var(--mantine-color-white)"
+      style={{
+        borderRadius: "var(--mantine-radius-md)",
+        boxShadow: "var(--mantine-shadow-sm)",
+      }}
     >
       <Paper
         maw={isMobile ? "100%" : 400}

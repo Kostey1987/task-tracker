@@ -8,7 +8,6 @@ import {
   Flex,
   Center,
   useMantineTheme,
-  useMantineColorScheme,
 } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler, RegisterOptions } from "react-hook-form";
@@ -40,7 +39,6 @@ interface AuthDrawerProps {
 export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
   const [isLogin, setIsLogin] = useState(false);
   const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -167,13 +165,15 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
           {isLogin ? "Вход" : "Регистрация"}
         </Text>
       }
+      bg="var(--mantine-color-white)"
       styles={{
         header: {
-          backgroundColor:
-            colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+          backgroundColor: "var(--mantine-color-white)",
+          borderBottom: "1px solid var(--mantine-color-gray-3)",
         },
         body: {
           padding: isMobile ? theme.spacing.sm : theme.spacing.md,
+          backgroundColor: "var(--mantine-color-white)",
         },
       }}
     >
@@ -181,12 +181,11 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
         <Paper
           w="100%"
           p={isMobile ? "md" : "lg"}
-          shadow="md"
+          shadow="sm"
           radius="md"
+          bg="var(--mantine-color-white)"
           style={{
             maxWidth: isMobile ? "100%" : 350,
-            backgroundColor:
-              colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
           }}
         >
           {isLogin ? (
@@ -231,7 +230,7 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
                   <Button
                     variant="subtle"
                     onClick={handleSwitchMode}
-                    c={theme.colors.blue[6]}
+                    color="blue"
                   >
                     Нет аккаунта? Зарегистрироваться
                   </Button>
@@ -293,7 +292,7 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
                   <Button
                     variant="subtle"
                     onClick={handleSwitchMode}
-                    c={theme.colors.blue[6]}
+                    color="blue"
                   >
                     Уже есть аккаунт? Войти
                   </Button>

@@ -80,19 +80,7 @@ function App() {
                   {isVerySmall ? "Выйти" : "Выйти"}
                 </Button>
               </>
-            ) : (
-              <Button
-                onClick={() => setAuthDrawerOpened(true)}
-                size={isVerySmall ? "xs" : isMobile ? "sm" : "md"}
-                px={isVerySmall ? "xs" : undefined}
-              >
-                {isVerySmall
-                  ? "Войти"
-                  : isMobile
-                  ? "Войти"
-                  : "Войти / Регистрация"}
-              </Button>
-            )}
+            ) : null}
           </Group>
         </Group>
       </Container>
@@ -106,11 +94,17 @@ function App() {
         padding="md"
         style={{ overflow: "hidden" }}
       >
-        <AppShell.Header>
+        <AppShell.Header
+          bg="var(--mantine-color-white)"
+          style={{ boxShadow: "var(--mantine-shadow-sm)" }}
+        >
           <AppHeader />
         </AppShell.Header>
 
-        <AppShell.Main style={{ overflow: "hidden" }}>
+        <AppShell.Main
+          style={{ overflow: "hidden" }}
+          bg="var(--mantine-color-gray-1)"
+        >
           <Routes>
             <Route
               path="/userProfile"
@@ -135,7 +129,16 @@ function App() {
                   <Navigate to="/tasks" replace />
                 ) : (
                   <Center style={{ minHeight: "80vh" }}>
-                    <Stack align="center" gap={isMobile ? "md" : "lg"}>
+                    <Stack
+                      align="center"
+                      gap={isMobile ? "md" : "lg"}
+                      bg="var(--mantine-color-white)"
+                      p="xl"
+                      style={{
+                        borderRadius: "var(--mantine-radius-md)",
+                        boxShadow: "var(--mantine-shadow-sm)",
+                      }}
+                    >
                       <Title order={isMobile ? 2 : 1} ta="center">
                         Добро пожаловать в Task Tracker
                       </Title>
