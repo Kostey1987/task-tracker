@@ -20,7 +20,9 @@ import {
   TextInput,
   Pagination,
   Flex,
+  useMantineTheme,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { DateInput } from "@mantine/dates";
 import { IconAlertCircle, IconPlus, IconFilter } from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -28,6 +30,8 @@ import dayjs from "dayjs";
 const STATUS_OPTIONS: TaskStatus[] = ["В работе", "Готово", "Просрочено"];
 
 export default function TasksPage() {
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [status, setStatus] = useState<string | null>(null);
@@ -155,7 +159,13 @@ export default function TasksPage() {
         Список задач
       </Title>
       <Center mb="md">
-        <Flex gap="md" align="flex-end">
+        <Flex
+          gap={isMobile ? "sm" : "md"}
+          align="flex-end"
+          direction={isMobile ? "column" : "row"}
+          w="100%"
+          maw={isMobile ? 400 : 600}
+        >
           <Select
             label="Статус"
             data={[
@@ -164,7 +174,8 @@ export default function TasksPage() {
             ]}
             value={status || ""}
             onChange={(v) => setStatus(v || null)}
-            maw={120}
+            w={isMobile ? "100%" : "auto"}
+            maw={isMobile ? undefined : 120}
             styles={{
               label: {
                 whiteSpace: "nowrap",
@@ -179,7 +190,8 @@ export default function TasksPage() {
             ]}
             value={sortDeadline}
             onChange={(v) => setSortDeadline((v as "asc" | "desc") || "asc")}
-            maw={200}
+            w={isMobile ? "100%" : "auto"}
+            maw={isMobile ? undefined : 200}
             styles={{
               label: {
                 whiteSpace: "nowrap",
@@ -193,7 +205,8 @@ export default function TasksPage() {
             onChange={(e) => setSearchInput(e.currentTarget.value)}
             rightSection={searchInput !== search ? <Loader size="xs" /> : null}
             rightSectionWidth={20}
-            maw={200}
+            w={isMobile ? "100%" : "auto"}
+            maw={isMobile ? undefined : 200}
             styles={{
               input: {
                 height: 36,

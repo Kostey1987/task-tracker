@@ -163,7 +163,7 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
       size={isMobile ? "100%" : 400}
       overlayProps={{ opacity: 0.5, blur: 4 }}
       title={
-        <Text size="xl" fw={600} ta="center">
+        <Text size={isMobile ? "lg" : "xl"} fw={600} ta="center">
           {isLogin ? "Вход" : "Регистрация"}
         </Text>
       }
@@ -173,18 +173,18 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
             colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
         },
         body: {
-          padding: theme.spacing.md,
+          padding: isMobile ? theme.spacing.sm : theme.spacing.md,
         },
       }}
     >
       <Flex justify="center" align="center" h="100%">
         <Paper
           w="100%"
-          p="lg"
+          p={isMobile ? "md" : "lg"}
           shadow="md"
           radius="md"
           style={{
-            maxWidth: 350,
+            maxWidth: isMobile ? "100%" : 350,
             backgroundColor:
               colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
           }}

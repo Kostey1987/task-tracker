@@ -11,7 +11,9 @@ import {
   FileButton,
   Badge,
   TextInput,
+  useMantineTheme,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconEdit, IconCheck, IconPhoto, IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { DatePickerInput } from "@mantine/dates";
@@ -56,6 +58,8 @@ export function TaskCard({
   onCancelEdit,
   onImageDeleted,
 }: TaskCardProps) {
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [desc, setDesc] = useState(description);
   const [currentStatus, setCurrentStatus] = useState<TaskStatus>(status);
   const [currentImage, setCurrentImage] = useState<string | undefined>(image);
@@ -315,11 +319,13 @@ export function TaskCard({
               maxRows={6}
               placeholder="Введите описание задачи..."
             />
-            <Group>
+            <Group gap={isMobile ? "xs" : "md"}>
               <Button
                 leftSection={<IconCheck size={16} />}
                 onClick={isCreating ? handleCreate : handleSave}
                 disabled={!desc.trim() || !!imageError}
+                size={isMobile ? "sm" : "md"}
+                fullWidth={isMobile}
               >
                 {isCreating ? "Создать задачу" : "Сохранить"}
               </Button>
@@ -333,13 +339,15 @@ export function TaskCard({
                     onCancelEdit && onCancelEdit();
                   }
                 }}
+                size={isMobile ? "sm" : "md"}
+                fullWidth={isMobile}
               >
                 Отмена
               </Button>
             </Group>
           </>
         ) : (
-          <Group justify="space-between">
+          <Group justify="space-between" gap={isMobile ? "xs" : "md"}>
             <Text
               styles={{
                 root: {
@@ -349,16 +357,17 @@ export function TaskCard({
                   overflow: "auto",
                 },
               }}
+              size={isMobile ? "sm" : "md"}
             >
               {desc}
             </Text>
             <Button
               variant="subtle"
-              size="xs"
-              leftSection={<IconEdit size={16} />}
+              size={isMobile ? "xs" : "sm"}
+              leftSection={<IconEdit size={isMobile ? 14 : 16} />}
               onClick={onEditClick}
             >
-              Редактировать
+              {isMobile ? "Изменить" : "Редактировать"}
             </Button>
           </Group>
         )}

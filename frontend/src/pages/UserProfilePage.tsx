@@ -1,4 +1,12 @@
-import { Button, Paper, Stack, Title, Flex } from "@mantine/core";
+import {
+  Button,
+  Paper,
+  Stack,
+  Title,
+  Flex,
+  useMantineTheme,
+} from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler, RegisterOptions } from "react-hook-form";
 import { TextInputField } from "../components/form/TextInputField";
@@ -15,6 +23,8 @@ const nameRules: RegisterOptions<ProfileFormValues> = {
 };
 
 export default function UserProfilePage() {
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const { data: user, refetch } = useGetProfileQuery();
   const {
     control,
@@ -49,9 +59,21 @@ export default function UserProfilePage() {
   };
 
   return (
-    <Stack p="xl" maw={700} mx="auto" mt="xl">
-      <Paper maw={400} w="100%" p="lg" shadow="md" radius="md" mx="auto">
-        <Title order={2} style={{ textAlign: "center", marginBottom: 16 }}>
+    <Stack
+      p={isMobile ? "md" : "xl"}
+      maw={700}
+      mx="auto"
+      mt={isMobile ? "md" : "xl"}
+    >
+      <Paper
+        maw={isMobile ? "100%" : 400}
+        w="100%"
+        p={isMobile ? "md" : "lg"}
+        shadow="md"
+        radius="md"
+        mx="auto"
+      >
+        <Title order={isMobile ? 3 : 2} ta="center" mb={isMobile ? "md" : "lg"}>
           Изменить имя пользователя
         </Title>
         <form onSubmit={handleSubmit(onSubmit)}>
