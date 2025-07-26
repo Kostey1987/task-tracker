@@ -192,19 +192,16 @@ export function TaskCard({
   };
 
   return (
-    <Card
-      shadow="sm"
-      padding="lg"
-      radius="md"
-      withBorder
-      style={{ position: "relative" }}
-    >
+    <Card shadow="sm" padding="lg" radius="md" withBorder pos="relative">
       {onDelete && (
         <Button
           variant="subtle"
           color="red"
           size="xs"
-          style={{ position: "absolute", top: 2, right: 2, zIndex: 3 }}
+          pos="absolute"
+          top={2}
+          right={2}
+          style={{ zIndex: 3 }}
           onClick={onDelete}
         >
           <IconTrash size={18} />
@@ -232,7 +229,7 @@ export function TaskCard({
               }}
               allowDeselect={false}
               size="xs"
-              style={{ width: 130 }}
+              w={130}
             />
           )}
         </Group>
@@ -285,7 +282,7 @@ export function TaskCard({
           </Stack>
         )}
         {!currentImage && (isCreating || isEditing) && imageError && (
-          <Text color="red" size="sm" style={{ textAlign: "center" }}>
+          <Text color="red" size="sm" ta="center">
             {imageError}
           </Text>
         )}
@@ -344,11 +341,13 @@ export function TaskCard({
         ) : (
           <Group justify="space-between">
             <Text
-              style={{
-                wordBreak: "break-word",
-                whiteSpace: "pre-wrap",
-                maxHeight: 180,
-                overflow: "auto",
+              styles={{
+                root: {
+                  wordBreak: "break-word",
+                  whiteSpace: "pre-wrap",
+                  maxHeight: 180,
+                  overflow: "auto",
+                },
               }}
             >
               {desc}

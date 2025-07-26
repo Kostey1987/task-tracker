@@ -2,12 +2,7 @@ import { Button, Paper, Stack, Title, Flex } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler, RegisterOptions } from "react-hook-form";
 import { TextInputField } from "../components/form/TextInputField";
-import {
-  useLogoutMutation,
-  useUpdateUserMutation,
-  useGetProfileQuery,
-} from "../services/authApi";
-import { useNavigate } from "react-router-dom";
+import { useUpdateUserMutation, useGetProfileQuery } from "../services/authApi";
 import { useEffect, useMemo } from "react";
 
 interface ProfileFormValues {
@@ -31,10 +26,8 @@ export default function UserProfilePage() {
     mode: "onTouched",
     defaultValues: { name: user?.name || "" },
   });
-  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
   const [updateUser, { isLoading: isUpdating, error: updateError, isSuccess }] =
     useUpdateUserMutation();
-  const navigate = useNavigate();
 
   const currentName = watch("name");
   const isNameChanged = useMemo(
@@ -55,18 +48,9 @@ export default function UserProfilePage() {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout().unwrap();
-      navigate("/login");
-    } catch (e) {
-      // обработка ошибки
-    }
-  };
-
   return (
-    <Flex justify="center" align="center" h="100vh">
-      <Paper maw={400} w="100%" p="lg" shadow="md" radius="md">
+    <Stack p="xl" maw={700} mx="auto" mt="xl">
+      <Paper maw={400} w="100%" p="lg" shadow="md" radius="md" mx="auto">
         <Title order={2} style={{ textAlign: "center", marginBottom: 16 }}>
           Изменить имя пользователя
         </Title>
@@ -95,19 +79,9 @@ export default function UserProfilePage() {
             {updateError && (
               <div style={{ color: "red" }}>Ошибка обновления</div>
             )}
-            <Button
-              type="button"
-              color="red"
-              fullWidth
-              mt="md"
-              onClick={handleLogout}
-              loading={isLoggingOut}
-            >
-              Выйти
-            </Button>
           </Stack>
         </form>
       </Paper>
-    </Flex>
+    </Stack>
   );
 }

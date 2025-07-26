@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   useGetTasksQuery,
   useCreateTaskMutation,
@@ -19,9 +19,10 @@ import {
   Select,
   TextInput,
   Pagination,
+  Flex,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
-import { IconAlertCircle, IconPlus } from "@tabler/icons-react";
+import { IconAlertCircle, IconPlus, IconFilter } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 const STATUS_OPTIONS: TaskStatus[] = ["В работе", "Готово", "Просрочено"];
@@ -30,10 +31,25 @@ export default function TasksPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [status, setStatus] = useState<string | null>(null);
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [sortDeadline, setSortDeadline] = useState<"asc" | "desc">("asc");
   const [isCreatingCard, setIsCreatingCard] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+
+  // Debounce для поиска
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // Сброс страницы при изменении поиска или фильтров
+  useEffect(() => {
+    setPage(1);
+  }, [search, status, sortDeadline]);
 
   const { data, isLoading, error, refetch } = useGetTasksQuery({
     page,
@@ -135,36 +151,61 @@ export default function TasksPage() {
 
   return (
     <Stack p="xl" maw={700} mx="auto">
-      <Title order={2} style={{ textAlign: "center" }} mb="md">
+      <Title order={2} ta="center" mb="md">
         Список задач
       </Title>
-      <Group mb="md" gap="md" wrap="wrap">
-        <Select
-          label="Статус"
-          data={[
-            { value: "", label: "Все" },
-            ...STATUS_OPTIONS.map((s) => ({ value: s, label: s })),
-          ]}
-          value={status || ""}
-          onChange={(v) => setStatus(v || null)}
-          style={{ minWidth: 120 }}
-        />
-        <Select
-          label="Сортировка по дедлайну"
-          data={[
-            { value: "asc", label: "По возрастанию" },
-            { value: "desc", label: "По убыванию" },
-          ]}
-          value={sortDeadline}
-          onChange={(v) => setSortDeadline((v as "asc" | "desc") || "asc")}
-          style={{ minWidth: 180 }}
-        />
-        <TextInput
-          label="Поиск"
-          placeholder="Описание..."
-          value={search}
-          onChange={(e) => setSearch(e.currentTarget.value)}
-        />
+      <Center mb="md">
+        <Flex gap="md" align="flex-end">
+          <Select
+            label="Статус"
+            data={[
+              { value: "", label: "Все" },
+              ...STATUS_OPTIONS.map((s) => ({ value: s, label: s })),
+            ]}
+            value={status || ""}
+            onChange={(v) => setStatus(v || null)}
+            maw={120}
+            styles={{
+              label: {
+                whiteSpace: "nowrap",
+              },
+            }}
+          />
+          <Select
+            label="Сортировка по дедлайну"
+            data={[
+              { value: "asc", label: "По возрастанию" },
+              { value: "desc", label: "По убыванию" },
+            ]}
+            value={sortDeadline}
+            onChange={(v) => setSortDeadline((v as "asc" | "desc") || "asc")}
+            maw={200}
+            styles={{
+              label: {
+                whiteSpace: "nowrap",
+              },
+            }}
+          />
+          <TextInput
+            label="Поиск по описанию"
+            placeholder="Введите текст для поиска..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.currentTarget.value)}
+            rightSection={searchInput !== search ? <Loader size="xs" /> : null}
+            rightSectionWidth={20}
+            maw={200}
+            styles={{
+              input: {
+                height: 36,
+              },
+              label: {
+                whiteSpace: "nowrap",
+              },
+            }}
+          />
+        </Flex>
+      </Center>
+      <Center mb="md">
         <Button
           leftSection={<IconPlus size={16} />}
           onClick={() => setIsCreatingCard(true)}
@@ -172,7 +213,7 @@ export default function TasksPage() {
         >
           Новая задача
         </Button>
-      </Group>
+      </Center>
       {isCreatingCard && (
         <TaskCard
           description=""
@@ -190,6 +231,7 @@ export default function TasksPage() {
       {data?.tasks.length ? (
         data.tasks.map((task) => (
           <TaskCard
+            key={task.id}
             id={task.id}
             description={task.description}
             status={task.status as TaskStatus}
@@ -212,7 +254,7 @@ export default function TasksPage() {
       ) : (
         <Center>
           <Text color="dimmed" size="lg">
-            Нет задач
+            {search ? `Задачи по запросу "${search}" не найдены` : "Нет задач"}
           </Text>
         </Center>
       )}

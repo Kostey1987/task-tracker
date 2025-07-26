@@ -1,0 +1,308 @@
+import React, { useState } from "react";
+import {
+  Drawer,
+  Button,
+  Paper,
+  Stack,
+  Text,
+  Flex,
+  Center,
+  useMantineTheme,
+  useMantineColorScheme,
+} from "@mantine/core";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler, RegisterOptions } from "react-hook-form";
+import { TextInputField } from "./form/TextInputField";
+import { useRegisterMutation, useLoginMutation } from "../services/authApi";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../store/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from "@mantine/hooks";
+import { api } from "../services/api";
+
+interface RegisterFormValues {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
+interface AuthDrawerProps {
+  opened: boolean;
+  onClose: () => void;
+}
+
+export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
+  const [isLogin, setIsLogin] = useState(false);
+  const theme = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Форма регистрации
+  const registerForm = useForm<RegisterFormValues>({
+    mode: "onTouched",
+    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
+  });
+
+  // Форма логина
+  const loginForm = useForm<LoginFormValues>({
+    mode: "onTouched",
+    defaultValues: { email: "", password: "" },
+  });
+
+  // Сброс форм при открытии drawer
+  React.useEffect(() => {
+    if (opened) {
+      registerForm.reset();
+      loginForm.reset();
+    }
+  }, [opened, registerForm, loginForm]);
+
+  const [registerUser, { isLoading: isRegisterLoading, error: registerError }] =
+    useRegisterMutation();
+  const [login, { isLoading: isLoginLoading, error: loginError }] =
+    useLoginMutation();
+
+  // Правила валидации для регистрации
+  const nameRules: RegisterOptions<RegisterFormValues> = {
+    required: "Имя обязательно",
+    minLength: { value: 2, message: "Имя слишком короткое" },
+  };
+
+  const emailRules: RegisterOptions<RegisterFormValues> = {
+    required: "Email обязателен",
+    pattern: {
+      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      message: "Некорректный формат email",
+    },
+  };
+
+  const passwordRules: RegisterOptions<RegisterFormValues> = {
+    required: "Пароль обязателен",
+    minLength: {
+      value: 6,
+      message: "Пароль должен быть не менее 6 символов",
+    },
+  };
+
+  const confirmPasswordRules: RegisterOptions<RegisterFormValues> = {
+    required: "Подтверждение пароля обязательно",
+    validate: (value) =>
+      value === registerForm.watch("password") || "Пароли не совпадают",
+  };
+
+  // Правила валидации для логина
+  const loginEmailRules: RegisterOptions<LoginFormValues> = {
+    required: "Email обязателен",
+    pattern: {
+      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      message: "Некорректный формат email",
+    },
+  };
+
+  const loginPasswordRules: RegisterOptions<LoginFormValues> = {
+    required: "Пароль обязателен",
+    minLength: {
+      value: 6,
+      message: "Пароль должен быть не менее 6 символов",
+    },
+  };
+
+  // Обработчик регистрации
+  const onRegisterSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
+    try {
+      await registerUser({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+      setIsLogin(true);
+      registerForm.reset();
+    } catch (e) {
+      // обработка ошибки
+    }
+  };
+
+  // Обработчик логина
+  const onLoginSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+    try {
+      const result = await login(data).unwrap();
+      dispatch(
+        setCredentials({
+          accessToken: result.token.accessToken,
+          refreshToken: result.token.refreshToken,
+        })
+      );
+      // Инвалидируем кэш задач после успешного логина
+      dispatch(api.util.invalidateTags(["Tasks"]));
+      onClose();
+      navigate("/tasks");
+    } catch (e) {
+      // обработка ошибки
+    }
+  };
+
+  const handleSwitchMode = () => {
+    setIsLogin(!isLogin);
+    registerForm.reset();
+    loginForm.reset();
+  };
+
+  return (
+    <Drawer
+      opened={opened}
+      onClose={onClose}
+      position={isMobile ? "top" : "left"}
+      size={isMobile ? "100%" : 400}
+      overlayProps={{ opacity: 0.5, blur: 4 }}
+      title={
+        <Text size="xl" fw={600} ta="center">
+          {isLogin ? "Вход" : "Регистрация"}
+        </Text>
+      }
+      styles={{
+        header: {
+          backgroundColor:
+            colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+        },
+        body: {
+          padding: theme.spacing.md,
+        },
+      }}
+    >
+      <Flex justify="center" align="center" h="100%">
+        <Paper
+          w="100%"
+          p="lg"
+          shadow="md"
+          radius="md"
+          style={{
+            maxWidth: 350,
+            backgroundColor:
+              colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
+          }}
+        >
+          {isLogin ? (
+            // Форма логина
+            <form
+              key="login-form"
+              onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+            >
+              <Stack>
+                <TextInputField
+                  name="email"
+                  control={loginForm.control}
+                  label="Email"
+                  type="email"
+                  placeholder="Введите email"
+                  rules={loginEmailRules}
+                  autoComplete="new-password"
+                />
+                <TextInputField
+                  name="password"
+                  control={loginForm.control}
+                  label="Пароль"
+                  type="password"
+                  placeholder="Введите пароль"
+                  rules={loginPasswordRules}
+                  autoComplete="new-password"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  mt="md"
+                  loading={isLoginLoading}
+                >
+                  Войти
+                </Button>
+                {loginError && (
+                  <Text c="red" ta="center">
+                    Ошибка входа
+                  </Text>
+                )}
+                <Center mt="md">
+                  <Button
+                    variant="subtle"
+                    onClick={handleSwitchMode}
+                    c={theme.colors.blue[6]}
+                  >
+                    Нет аккаунта? Зарегистрироваться
+                  </Button>
+                </Center>
+              </Stack>
+            </form>
+          ) : (
+            // Форма регистрации
+            <form
+              key="register-form"
+              onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
+            >
+              <Stack>
+                <TextInputField
+                  name="name"
+                  control={registerForm.control}
+                  label="Имя"
+                  placeholder="Введите имя"
+                  rules={nameRules}
+                />
+                <TextInputField
+                  name="email"
+                  control={registerForm.control}
+                  label="Email"
+                  type="email"
+                  placeholder="Введите email"
+                  rules={emailRules}
+                />
+                <TextInputField
+                  name="password"
+                  control={registerForm.control}
+                  label="Пароль"
+                  type="password"
+                  placeholder="Введите пароль"
+                  rules={passwordRules}
+                />
+                <TextInputField
+                  name="confirmPassword"
+                  control={registerForm.control}
+                  label="Подтвердите пароль"
+                  type="password"
+                  placeholder="Повторите пароль"
+                  rules={confirmPasswordRules}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  mt="md"
+                  loading={isRegisterLoading}
+                >
+                  Зарегистрироваться
+                </Button>
+                {registerError && (
+                  <Text c="red" ta="center">
+                    Ошибка регистрации
+                  </Text>
+                )}
+                <Center mt="md">
+                  <Button
+                    variant="subtle"
+                    onClick={handleSwitchMode}
+                    c={theme.colors.blue[6]}
+                  >
+                    Уже есть аккаунт? Войти
+                  </Button>
+                </Center>
+              </Stack>
+            </form>
+          )}
+        </Paper>
+      </Flex>
+    </Drawer>
+  );
+}
