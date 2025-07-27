@@ -1,69 +1,53 @@
-# React + TypeScript + Vite
+# Task Tracker Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Стек технологий
 
-Currently, two official plugins are available:
+- **React** — библиотека для построения пользовательских интерфейсов
+- **TypeScript** — типизация для повышения надежности кода
+- **Vite** — современный сборщик и dev-сервер
+- **Mantine** — UI-компоненты и стилизация
+- **Redux Toolkit** — современное управление состоянием
+- **RTK Query** — асинхронные запросы и кэширование данных
+- **Redux Persist** — сохранение состояния (токены) между сессиями
+- **Tabler Icons** — иконки интерфейса
+- **dayjs** — работа с датами и временем
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Реализованный функционал
 
-## Expanding the ESLint configuration
+- **Аутентификация**
+  - Регистрация и вход пользователя
+  - Хранение access и refresh токенов (Redux Persist)
+  - Автоматическое обновление access токена по refresh токену (refresh flow)
+  - Logout с удалением токенов
+- **Работа с задачами (Task Management)**
+  - CRUD: создание, просмотр, редактирование, удаление задач
+  - Фильтрация задач по статусу
+  - Поиск задач по описанию
+  - Сортировка задач по дедлайну
+  - Загрузка и удаление изображений к задачам
+  - Визуальное отображение статуса задачи (цвет, иконка, фон)
+- **Профиль пользователя**
+  - Просмотр и изменение имени пользователя
+- **UI и UX**
+  - Современный адаптивный дизайн (Mantine)
+  - Адаптация под мобильные устройства
+  - Единый стиль для всех страниц и компонентов
+- **Безопасность**
+  - Все защищённые запросы используют access token
+  - При истечении access token происходит автоматический refresh
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Запуск проекта
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. Установите зависимости:
+   ```bash
+   npm install
+   ```
+2. Запустите dev-сервер:
+   ```bash
+   npm run dev
+   ```
+3. Откройте [http://localhost:5173](http://localhost:5173) в браузере.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+> Для работы необходим запущенный backend (см. папку `../backend`).
