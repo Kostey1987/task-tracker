@@ -1,22 +1,14 @@
 import { useMemo, useCallback } from "react";
 import { useGetTasksQuery } from "../services/tasksApi";
-import { TaskCard } from "../components/TaskCard";
-import { TasksFilters } from "../components/TasksPage/TasksFilters";
-import { TasksList } from "../components/TasksPage/TasksList";
-import type { TaskStatus } from "../types/index";
-import type { TaskInput } from "../types";
 import {
-  Stack,
-  Title,
-  Loader,
-  Center,
-  Alert,
-  Button,
-  Pagination,
-  Text,
-} from "@mantine/core";
-import { IconAlertCircle, IconPlus } from "@tabler/icons-react";
-import { useTasksPageState, useTasksActions } from "../hooks";
+  TasksFilters,
+  TasksPageHeader,
+  TasksPageContent,
+} from "../components/TasksPage";
+import type { TaskInput } from "../types";
+import { Stack, Loader, Center, Alert } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
+import { useTasksPageState, useTasksActions, useTasksRefetch } from "../hooks";
 import React from "react";
 
 function TasksPageComponent() {
@@ -55,44 +47,13 @@ function TasksPageComponent() {
     sortDeadline: sortDeadline,
   });
 
-  // Обработчик создания задачи
-  const handleCreateTask = useCallback(
-    async (values: Partial<TaskInput> & { file?: File | null }) => {
-      if (!values.description || values.description.trim() === "") {
-        handleCreateCardToggle(false);
-        return;
-      }
-
-      if (values.description && values.status) {
-        await handleCreate(values);
-        refetch();
-        handleCreateCardToggle(false);
-      }
+  // Хук для централизованного управления refetch
+  const { refetchAndNotify } = useTasksRefetch({
+    refetch,
+    onSuccess: () => {
+      handleEditIdChange(null);
     },
-    [handleCreate, handleCreateCardToggle, refetch]
-  );
-
-  // Мемоизированная карточка создания
-  const createCard = useMemo(() => {
-    if (!isCreatingCard) return null;
-
-    return (
-      <TaskCard
-        task={{
-          id: -1,
-          description: "",
-          status: "В работе" as TaskStatus,
-          deadline: null,
-          image: null,
-          userId: 0,
-        }}
-        flags={{ isCreating: true }}
-        callbacks={{
-          onChange: handleCreateTask,
-        }}
-      />
-    );
-  }, [isCreatingCard, handleCreateTask]);
+  });
 
   // Оптимизированные обработчики
   const handleEditWithTask = useCallback(
@@ -101,23 +62,22 @@ function TasksPageComponent() {
       if (!task) return;
 
       await handleEdit(id, values, task);
-      refetch();
-      handleEditIdChange(null);
+      refetchAndNotify();
     },
-    [handleEdit, data?.tasks, refetch, handleEditIdChange]
+    [handleEdit, data?.tasks, refetchAndNotify]
   );
 
   const handleDeleteWithRefetch = useCallback(
     async (id: number) => {
       await handleDelete(id);
-      refetch();
+      refetchAndNotify();
     },
-    [handleDelete, refetch]
+    [handleDelete, refetchAndNotify]
   );
 
   const handleImageDeleted = useCallback(() => {
-    refetch();
-  }, [refetch]);
+    refetchAndNotify();
+  }, [refetchAndNotify]);
 
   // Мемоизированные вычисления
   const isSearching = useMemo(() => {
@@ -167,9 +127,11 @@ function TasksPageComponent() {
         boxShadow: "var(--mantine-shadow-sm)",
       }}
     >
-      <Title order={2} ta="center" mb="md">
-        Список задач
-      </Title>
+      <TasksPageHeader
+        isCreatingCard={isCreatingCard}
+        isCreating={isCreating}
+        onCreateClick={() => handleCreateCardToggle(true)}
+      />
 
       <Center mb="md">
         <TasksFilters
@@ -183,45 +145,23 @@ function TasksPageComponent() {
         />
       </Center>
 
-      <Center mb="md">
-        <Button
-          leftSection={<IconPlus size={16} />}
-          onClick={() => handleCreateCardToggle(true)}
-          disabled={isCreatingCard || isCreating}
-          loading={isCreating}
-        >
-          Новая задача
-        </Button>
-      </Center>
-
-      {createCard}
-
-      {hasTasks ? (
-        <TasksList
-          tasks={data!.tasks}
-          editingId={editingId}
-          onEditClick={handleEditIdChange}
-          onCancelEdit={() => handleEditIdChange(null)}
-          onImageDeleted={handleImageDeleted}
-          onEdit={handleEditWithTask}
-          onDelete={handleDeleteWithRefetch}
-        />
-      ) : (
-        <Center>
-          <Text color="dimmed" size="lg">
-            {emptyMessage}
-          </Text>
-        </Center>
-      )}
-
-      {showPagination && (
-        <Pagination
-          value={page}
-          onChange={handlePageChange}
-          total={data!.totalPages}
-          mt="md"
-        />
-      )}
+      <TasksPageContent
+        data={data!}
+        editingId={editingId}
+        isCreatingCard={isCreatingCard}
+        hasTasks={hasTasks}
+        showPagination={showPagination}
+        page={page}
+        emptyMessage={emptyMessage}
+        handleCreate={handleCreate}
+        handleCreateCardToggle={handleCreateCardToggle}
+        handleEditIdChange={handleEditIdChange}
+        handleImageDeleted={handleImageDeleted}
+        handleEditWithTask={handleEditWithTask}
+        handleDeleteWithRefetch={handleDeleteWithRefetch}
+        handlePageChange={handlePageChange}
+        refetch={refetch}
+      />
     </Stack>
   );
 }
