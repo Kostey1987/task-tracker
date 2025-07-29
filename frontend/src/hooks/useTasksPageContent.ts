@@ -3,18 +3,7 @@ import type { UseTasksPageContentProps } from "../types";
 
 export function useTasksPageContent({
   data,
-  editingId,
-  isCreatingCard,
   search,
-  page,
-  handleCreate,
-  handleCreateCardToggle,
-  handleEditIdChange,
-  handleImageDeleted,
-  handleEditWithTask,
-  handleDeleteWithRefetch,
-  handlePageChange,
-  refetch,
 }: UseTasksPageContentProps) {
   const emptyMessage = useMemo(() => {
     if (search) {

@@ -64,18 +64,7 @@ export interface UseTasksRefetchProps {
 // useTasksPageContent
 export interface UseTasksPageContentProps {
   data: GetTasksResponse;
-  editingId: number | null;
-  isCreatingCard: boolean;
   search: string | null;
-  page: number;
-  handleCreate: (values: Partial<TaskInput> & { file?: File | null }) => Promise<void>;
-  handleCreateCardToggle: (value: boolean) => void;
-  handleEditIdChange: (id: number | null) => void;
-  handleImageDeleted: () => void;
-  handleEditWithTask: (id: number, values: Partial<TaskInput> & { file?: File | null }) => Promise<void>;
-  handleDeleteWithRefetch: (id: number) => Promise<void>;
-  handlePageChange: (page: number) => void;
-  refetch: () => void;
 }
 
 // Импорты для типов

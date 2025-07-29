@@ -21,18 +21,7 @@ export function TasksPageContent({
 }: TasksPageContentProps) {
   const { emptyMessage, hasTasks, showPagination } = useTasksPageContent({
     data,
-    editingId,
-    isCreatingCard,
     search,
-    page,
-    handleCreate,
-    handleCreateCardToggle,
-    handleEditIdChange,
-    handleImageDeleted,
-    handleEditWithTask,
-    handleDeleteWithRefetch,
-    handlePageChange,
-    refetch,
   });
 
   return (
