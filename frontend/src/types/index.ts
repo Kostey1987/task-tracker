@@ -13,17 +13,15 @@ export interface TaskCardProps {
   id?: number;
   description: string;
   status: TaskStatus;
-  deadline?: string;
-  image?: string;
-  onChange?: (
-    data: Partial<{
-      description: string;
-      status: TaskStatus;
-      image?: string;
-      deadline?: string;
-      file?: File | null;
-    }>
-  ) => void;
+  deadline?: string | null;
+  image?: string | null;
+  onChange?: (data: {
+    description: string;
+    status: TaskStatus;
+    deadline?: string;
+    file?: File;
+    image?: string;
+  }) => void;
   isCreating?: boolean;
   onDelete?: () => void;
   isEditing?: boolean;

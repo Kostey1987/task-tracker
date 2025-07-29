@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
   useGetTasksQuery,
   useCreateTaskMutation,
@@ -15,7 +15,6 @@ import {
   Alert,
   Text,
   Button,
-  Group,
   Select,
   TextInput,
   Pagination,
@@ -23,9 +22,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { DateInput } from "@mantine/dates";
-import { IconAlertCircle, IconPlus, IconFilter } from "@tabler/icons-react";
-import dayjs from "dayjs";
+import { IconAlertCircle, IconPlus } from "@tabler/icons-react";
 
 const STATUS_OPTIONS: TaskStatus[] = ["В работе", "Готово", "Просрочено"];
 
@@ -183,7 +180,7 @@ export default function TasksPage() {
             value={status || ""}
             onChange={(v) => setStatus(v || null)}
             w={isMobile ? "100%" : "auto"}
-            maw={isMobile ? undefined : 120}
+            maw={isMobile ? "100%" : 120}
             styles={{
               label: {
                 whiteSpace: "nowrap",
@@ -199,7 +196,7 @@ export default function TasksPage() {
             value={sortDeadline}
             onChange={(v) => setSortDeadline((v as "asc" | "desc") || "asc")}
             w={isMobile ? "100%" : "auto"}
-            maw={isMobile ? undefined : 200}
+            maw={isMobile ? "100%" : 200}
             styles={{
               label: {
                 whiteSpace: "nowrap",
@@ -214,7 +211,7 @@ export default function TasksPage() {
             rightSection={searchInput !== search ? <Loader size="xs" /> : null}
             rightSectionWidth={20}
             w={isMobile ? "100%" : "auto"}
-            maw={isMobile ? undefined : 200}
+            maw={isMobile ? "100%" : 200}
             styles={{
               input: {
                 height: 36,
