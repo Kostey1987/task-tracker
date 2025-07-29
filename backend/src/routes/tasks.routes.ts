@@ -48,7 +48,7 @@ router.post(
       return res.status(401).json({ error: "User not authenticated" });
     }
     try {
-      let imagePath: string | undefined = undefined;
+      let imagePath: string | null = null;
       if (req.file) {
         const image = sharp(req.file.path);
         const metadata = await image.metadata();

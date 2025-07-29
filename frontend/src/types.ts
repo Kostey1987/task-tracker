@@ -5,13 +5,16 @@ export interface User {
   email: string;
 }
 
+// Импорт TaskStatus из types/index.ts
+export type TaskStatus = "В работе" | "Готово" | "Просрочено";
+
 // Типы для задачи
 export interface Task {
-  id?: number;
+  id: number;
   description: string;
-  status?: string;
-  deadline?: string;
-  image?: string;
+  status: TaskStatus;
+  deadline: string | null;
+  image: string | null;
   userId: number;
 }
 
@@ -26,9 +29,9 @@ export interface AuthResponse {
 // Входные данные для задач
 export interface TaskInput {
   description: string;
-  status?: string;
-  deadline?: string;
-  image?: string;
+  status?: TaskStatus;
+  deadline: string | null;
+  image: string | null;
 }
 
 // Входные данные для регистрации

@@ -8,7 +8,7 @@ export interface Task {
    * Дата и время дедлайна в формате YYYY-MM-DDTHH:mm (ISO 8601, без секунд)
    */
   deadline?: string;
-  image?: string;
+  image: string | null;
   userId: number;
 }
 
@@ -109,6 +109,10 @@ export async function updateTask(taskId: number, updates: Partial<Task>) {
   if (updates.deadline) {
     fields.push("deadline = ?");
     values.push(updates.deadline);
+  }
+  if (updates.image !== undefined) {
+    fields.push("image = ?");
+    values.push(updates.image);
   }
   if (fields.length === 0) throw new Error("No fields to update");
   values.push(taskId);

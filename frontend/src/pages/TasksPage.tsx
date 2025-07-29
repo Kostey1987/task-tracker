@@ -7,6 +7,7 @@ import {
 } from "../services/tasksApi";
 import { TaskCard } from "../components/TaskCard";
 import type { TaskStatus } from "../types/index";
+import type { TaskInput } from "../types";
 import {
   Stack,
   Title,
@@ -31,7 +32,7 @@ export default function TasksPage() {
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<TaskStatus | null>(null);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [sortDeadline, setSortDeadline] = useState<"asc" | "desc">("asc");
@@ -64,13 +65,7 @@ export default function TasksPage() {
   const [deleteTask] = useDeleteTaskMutation();
 
   const handleCreate = async (
-    values: Partial<{
-      description: string;
-      status: TaskStatus;
-      image?: string;
-      deadline?: string;
-      file?: File | null;
-    }>
+    values: Partial<TaskInput> & { file?: File | null }
   ) => {
     if (!values.description?.trim() || !values.status) return;
     try {
@@ -95,13 +90,7 @@ export default function TasksPage() {
 
   const handleEdit = async (
     id: number,
-    values: Partial<{
-      description: string;
-      status: TaskStatus;
-      image?: string;
-      deadline?: string;
-      file?: File | null;
-    }>
+    values: Partial<TaskInput> & { file?: File | null }
   ) => {
     const task = data?.tasks.find((t) => t.id === id);
     if (!task) return;
@@ -178,7 +167,7 @@ export default function TasksPage() {
               ...STATUS_OPTIONS.map((s) => ({ value: s, label: s })),
             ]}
             value={status || ""}
-            onChange={(v) => setStatus(v || null)}
+            onChange={(v) => setStatus((v as TaskStatus) || null)}
             w={isMobile ? "100%" : "auto"}
             maw={isMobile ? "100%" : 120}
             styles={{
@@ -234,15 +223,23 @@ export default function TasksPage() {
       </Center>
       {isCreatingCard && (
         <TaskCard
-          description=""
-          status={"В работе"}
-          isCreating={true}
-          onChange={async (values) => {
-            if (!values.description || values.description.trim() === "") {
-              setIsCreatingCard(false);
-            } else if (values.description && values.status) {
-              await handleCreate(values);
-            }
+          task={{
+            id: -1, // временный id для новой задачи
+            description: "",
+            status: "В работе" as TaskStatus,
+            deadline: null,
+            image: null,
+            userId: 0, // временный userId для новой задачи
+          }}
+          flags={{ isCreating: true }}
+          callbacks={{
+            onChange: async (values) => {
+              if (!values.description || values.description.trim() === "") {
+                setIsCreatingCard(false);
+              } else if (values.description && values.status) {
+                await handleCreate(values);
+              }
+            },
           }}
         />
       )}
@@ -250,23 +247,23 @@ export default function TasksPage() {
         data.tasks.map((task) => (
           <TaskCard
             key={task.id}
-            id={task.id}
-            description={task.description}
-            status={task.status as TaskStatus}
-            deadline={task.deadline}
-            image={task.image}
-            isEditing={editingId === task.id}
-            onEditClick={() => setEditingId(task.id!)}
-            onCancelEdit={() => setEditingId(null)}
-            onImageDeleted={() => refetch()}
-            onChange={
-              editingId === task.id
-                ? async (values) => {
-                    await handleEdit(task.id!, values);
-                  }
-                : undefined
-            }
-            onDelete={() => handleDelete(task.id!)}
+            task={{
+              ...task,
+              status: task.status as TaskStatus,
+            }}
+            flags={{ isEditing: editingId === task.id }}
+            callbacks={{
+              onEditClick: () => setEditingId(task.id!),
+              onCancelEdit: () => setEditingId(null),
+              onImageDeleted: () => refetch(),
+              onChange:
+                editingId === task.id
+                  ? async (values) => {
+                      await handleEdit(task.id!, values);
+                    }
+                  : undefined,
+              onDelete: () => handleDelete(task.id!),
+            }}
           />
         ))
       ) : (

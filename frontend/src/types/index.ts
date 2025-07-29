@@ -2,32 +2,27 @@
 export type TaskStatus = "В работе" | "Готово" | "Просрочено";
 
 export interface Task {
-  id?: number;
+  id: number;
   description: string;
   status: TaskStatus;
-  deadline?: string;
-  image?: string;
+  deadline: string | null;
+  image: string | null;
+  userId: number;
 }
 
 export interface TaskCardProps {
-  id?: number;
-  description: string;
-  status: TaskStatus;
-  deadline?: string | null;
-  image?: string | null;
-  onChange?: (data: {
-    description: string;
-    status: TaskStatus;
-    deadline?: string;
-    file?: File;
-    image?: string;
-  }) => void;
-  isCreating?: boolean;
-  onDelete?: () => void;
-  isEditing?: boolean;
-  onEditClick?: () => void;
-  onCancelEdit?: () => void;
-  onImageDeleted?: () => void;
+  task: Task;
+  flags?: {
+    isEditing?: boolean;
+    isCreating?: boolean;
+  };
+  callbacks?: {
+    onChange?: (data: Partial<Task> & { file?: File | null }) => void;
+    onDelete?: () => void;
+    onEditClick?: () => void;
+    onCancelEdit?: () => void;
+    onImageDeleted?: () => void;
+  };
 }
 
 // Типы для аутентификации
