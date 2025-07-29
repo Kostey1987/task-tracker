@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import type { UseDeadlineHandlerProps } from "../types";
+import type { UseDeadlineHandlerProps } from "../types/types-exports";
 
 export function useDeadlineHandler({
   initialDeadline,

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { TaskStatus, UseTaskCardStateProps } from "../types";
+import type { TaskStatus, UseTaskCardStateProps } from "../types/types-exports";
 
 export function useTaskCardState({
   initialDescription,

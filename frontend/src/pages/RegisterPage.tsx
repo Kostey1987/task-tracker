@@ -4,7 +4,7 @@ import type { SubmitHandler, RegisterOptions } from "react-hook-form";
 import { TextInputField } from "../components/form/TextInputField";
 import { useRegisterMutation } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
-import type { RegisterFormValues } from "../types";
+import type { RegisterFormValues } from "../types/types-exports";
 
 export default function RegisterPage() {
   const { control, handleSubmit, watch } = useForm<RegisterFormValues>({

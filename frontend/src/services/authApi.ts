@@ -1,5 +1,10 @@
 import { api } from "./api";
-import type { AuthResponse, User, RegisterInput, LoginInput } from "../types";
+import type {
+  AuthResponse,
+  User,
+  RegisterInput,
+  LoginInput,
+} from "../types/types-exports";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({

@@ -7,7 +7,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import type { TaskStatus, TasksFiltersProps } from "../../types";
+import type { TaskStatus, TasksFiltersProps } from "../../types/types-exports";
 import React from "react";
 
 const STATUS_OPTIONS: TaskStatus[] = ["В работе", "Готово", "Просрочено"];

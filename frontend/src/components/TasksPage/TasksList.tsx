@@ -1,7 +1,11 @@
 import { useMemo } from "react";
 import { Center, Text } from "@mantine/core";
 import { TaskCard } from "../TaskCard";
-import type { Task, TaskStatus, TasksListProps } from "../../types";
+import type {
+  Task,
+  TaskStatus,
+  TasksListProps,
+} from "../../types/types-exports";
 import React from "react";
 
 function TasksListComponent({

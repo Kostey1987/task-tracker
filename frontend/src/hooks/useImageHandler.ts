@@ -1,7 +1,10 @@
 import { useState } from "react";
-import type { UseImageHandlerProps } from "../types";
+import type { UseImageHandlerProps } from "../types/types-exports";
 
-export function useImageHandler({ initialImage, onImageChange }: UseImageHandlerProps) {
+export function useImageHandler({
+  initialImage,
+  onImageChange,
+}: UseImageHandlerProps) {
   const [currentImage, setCurrentImage] = useState<string | null>(initialImage);
   const [file, setFile] = useState<File | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -17,7 +20,9 @@ export function useImageHandler({ initialImage, onImageChange }: UseImageHandler
     }
 
     if (!newFile.type.startsWith("image/")) {
-      setImageError("Можно загружать только изображения (jpeg, png, webp и др.)");
+      setImageError(
+        "Можно загружать только изображения (jpeg, png, webp и др.)"
+      );
       return;
     }
 
@@ -69,4 +74,4 @@ export function useImageHandler({ initialImage, onImageChange }: UseImageHandler
     resetImageError,
     setCurrentImage,
   };
-} 
+}

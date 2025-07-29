@@ -1,6 +1,6 @@
 import { Title, Center, Button } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
-import type { TasksPageHeaderProps } from "../../types";
+import type { TasksPageHeaderProps } from "../../types/types-exports";
 
 export function TasksPageHeader({
   isCreatingCard,

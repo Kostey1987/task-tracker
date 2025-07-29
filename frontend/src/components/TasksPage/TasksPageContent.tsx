@@ -1,8 +1,8 @@
 import { Center, Text, Pagination } from "@mantine/core";
 import { TasksList } from "./TasksList";
 import { TaskCreationCard } from "./TaskCreationCard";
-import type { TasksPageContentProps } from "../../types";
-import { useTasksPageContent } from "../../hooks";
+import type { TasksPageContentProps } from "../../types/types-exports";
+import { useTasksPageContent } from "../../hooks/hooks-exports";
 
 export function TasksPageContent({
   data,

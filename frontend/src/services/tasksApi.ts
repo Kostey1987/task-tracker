@@ -6,7 +6,7 @@ import type {
   CreateTaskResponse,
   MessageResponse,
   GetTasksParams,
-} from "../types";
+} from "../types/types-exports";
 
 export const tasksApi = api.injectEndpoints({
   endpoints: (builder) => ({

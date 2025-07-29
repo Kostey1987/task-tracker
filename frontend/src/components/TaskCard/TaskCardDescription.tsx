@@ -1,5 +1,5 @@
 import { Text, Textarea } from "@mantine/core";
-import type { TaskCardDescriptionProps } from "../../types";
+import type { TaskCardDescriptionProps } from "../../types/types-exports";
 
 export function TaskCardDescription({
   isEditing,

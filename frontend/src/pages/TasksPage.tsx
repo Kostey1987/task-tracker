@@ -4,11 +4,15 @@ import {
   TasksFilters,
   TasksPageHeader,
   TasksPageContent,
-} from "../components/TasksPage";
-import type { TaskInput, GetTasksResponse } from "../types";
+} from "../components/TasksPage/tasks-page-exports";
+import type { TaskInput, GetTasksResponse } from "../types/types-exports";
 import { Stack, Loader, Center, Alert } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
-import { useTasksPageState, useTasksActions, useTasksRefetch } from "../hooks";
+import {
+  useTasksPageState,
+  useTasksActions,
+  useTasksRefetch,
+} from "../hooks/hooks-exports";
 import React from "react";
 
 function TasksPageComponent() {

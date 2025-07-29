@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { UseTasksPageContentProps } from "../types";
+import type { UseTasksPageContentProps } from "../types/types-exports";
 
 export function useTasksPageContent({
   data,

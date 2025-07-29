@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Card, Stack, useMantineTheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import type { Task, TaskCardProps } from "../types";
+import type { Task, TaskCardProps } from "../types/types-exports";
 import { TaskCardHeader } from "./TaskCard/TaskCardHeader";
 import { TaskCardImage } from "./TaskCard/TaskCardImage";
 import { TaskCardDeadline } from "./TaskCard/TaskCardDeadline";
@@ -12,7 +12,7 @@ import {
   useDeadlineHandler,
   useTaskCardState,
   useTaskCardActions,
-} from "../hooks";
+} from "../hooks/hooks-exports";
 import React from "react";
 
 function TaskCardComponent({

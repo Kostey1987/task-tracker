@@ -1,6 +1,6 @@
 // Конфигурация окружений
 export const ENV_CONFIG = {
-  // API Configuration
+  // API Configuration (optional - has default value)
   API_URL: import.meta.env.VITE_API_URL || "http://localhost:5000",
 
   // Environment
@@ -15,7 +15,8 @@ export const ENV_CONFIG = {
 
 // Валидация конфигурации
 export function validateConfig() {
-  const requiredVars = ["VITE_API_URL"];
+  // VITE_API_URL не является обязательной, так как есть значение по умолчанию
+  const requiredVars: string[] = [];
   const missingVars = requiredVars.filter(
     (varName) => !import.meta.env[varName]
   );

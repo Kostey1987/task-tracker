@@ -12,7 +12,7 @@ import type { SubmitHandler, RegisterOptions } from "react-hook-form";
 import { TextInputField } from "../components/form/TextInputField";
 import { useUpdateUserMutation, useGetProfileQuery } from "../services/authApi";
 import { useEffect, useMemo } from "react";
-import type { ProfileFormValues } from "../types";
+import type { ProfileFormValues } from "../types/types-exports";
 
 const nameRules: RegisterOptions<ProfileFormValues> = {
   required: "Имя обязательно",

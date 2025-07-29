@@ -1,6 +1,6 @@
 import { TextInput } from "@mantine/core";
 import { useController } from "react-hook-form";
-import type { TextInputFieldProps } from "../../types";
+import type { TextInputFieldProps } from "../../types/types-exports";
 
 // minHeight для одной строки ошибки
 const errorStyle = { minHeight: 20, color: "red", fontSize: 14, marginTop: 4 };

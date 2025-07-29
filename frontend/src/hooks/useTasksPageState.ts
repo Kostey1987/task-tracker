@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import type { TaskStatus, UseTasksPageStateProps } from "../types";
+import type {
+  TaskStatus,
+  UseTasksPageStateProps,
+} from "../types/types-exports";
 
 export function useTasksPageState({
   onFiltersChange,

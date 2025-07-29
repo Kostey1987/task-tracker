@@ -5,7 +5,10 @@ import {
   IconAlertTriangle,
   IconClock,
 } from "@tabler/icons-react";
-import type { TaskStatus, TaskCardHeaderProps } from "../../types";
+import type {
+  TaskStatus,
+  TaskCardHeaderProps,
+} from "../../types/types-exports";
 
 const getStatusIcon = (status: TaskStatus) => {
   switch (status) {

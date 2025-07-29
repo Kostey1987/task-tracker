@@ -1,6 +1,6 @@
 import { Button, Group } from "@mantine/core";
 import { IconCheck, IconEdit } from "@tabler/icons-react";
-import type { TaskCardActionsProps } from "../../types";
+import type { TaskCardActionsProps } from "../../types/types-exports";
 
 export function TaskCardActions({
   isEditing,

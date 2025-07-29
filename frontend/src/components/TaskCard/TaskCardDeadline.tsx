@@ -1,5 +1,5 @@
 import { Text, TextInput } from "@mantine/core";
-import type { TaskCardDeadlineProps } from "../../types";
+import type { TaskCardDeadlineProps } from "../../types/types-exports";
 
 export function TaskCardDeadline({
   isEditing,

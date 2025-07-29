@@ -1,7 +1,10 @@
 import { useCallback } from "react";
 import { TaskCard } from "../TaskCard";
-import type { TaskStatus, TaskCreationCardProps } from "../../types";
-import { useTasksRefetch } from "../../hooks";
+import type {
+  TaskStatus,
+  TaskCreationCardProps,
+} from "../../types/types-exports";
+import { useTasksRefetch } from "../../hooks/hooks-exports";
 
 export function TaskCreationCard({
   isCreatingCard,
