@@ -1,9 +1,5 @@
 import { useState } from "react";
-
-interface UseImageHandlerProps {
-  initialImage: string | null;
-  onImageChange?: (file: File | null, image: string | null) => void;
-}
+import type { UseImageHandlerProps } from "../types";
 
 export function useImageHandler({ initialImage, onImageChange }: UseImageHandlerProps) {
   const [currentImage, setCurrentImage] = useState<string | null>(initialImage);

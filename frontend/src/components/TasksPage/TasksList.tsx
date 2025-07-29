@@ -1,22 +1,8 @@
 import { useMemo } from "react";
 import { Center, Text } from "@mantine/core";
 import { TaskCard } from "../TaskCard";
-import type { Task, TaskStatus } from "../../types/index";
-import type { TaskInput } from "../../types";
+import type { Task, TaskStatus, TasksListProps } from "../../types";
 import React from "react";
-
-interface TasksListProps {
-  tasks: Task[];
-  editingId: number | null;
-  onEditClick: (id: number) => void;
-  onCancelEdit: () => void;
-  onImageDeleted: () => void;
-  onEdit: (
-    id: number,
-    values: Partial<TaskInput> & { file?: File | null }
-  ) => void;
-  onDelete: (id: number) => void;
-}
 
 function TasksListComponent({
   tasks,

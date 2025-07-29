@@ -1,16 +1,7 @@
 import { useCallback } from "react";
 import { TaskCard } from "../TaskCard";
-import type { TaskStatus, TaskInput } from "../../types";
+import type { TaskStatus, TaskCreationCardProps } from "../../types";
 import { useTasksRefetch } from "../../hooks";
-
-interface TaskCreationCardProps {
-  isCreatingCard: boolean;
-  handleCreate: (
-    values: Partial<TaskInput> & { file?: File | null }
-  ) => Promise<void>;
-  handleCreateCardToggle: (value: boolean) => void;
-  refetch: () => void;
-}
 
 export function TaskCreationCard({
   isCreatingCard,

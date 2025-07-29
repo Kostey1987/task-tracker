@@ -1,15 +1,6 @@
 import { Button, Group } from "@mantine/core";
 import { IconCheck, IconEdit } from "@tabler/icons-react";
-
-interface TaskCardActionsProps {
-  isEditing: boolean;
-  isCreating: boolean;
-  isMobile: boolean;
-  onSave: () => void;
-  onCancel: () => void;
-  onEditClick?: () => void;
-  saveDisabled?: boolean;
-}
+import type { TaskCardActionsProps } from "../../types";
 
 export function TaskCardActions({
   isEditing,

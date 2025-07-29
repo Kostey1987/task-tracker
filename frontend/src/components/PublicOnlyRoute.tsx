@@ -1,13 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import type { RootState } from "../store/store";
+import type { RootState, PublicOnlyRouteProps } from "../types";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-export const PublicOnlyRoute: React.FC<Props> = ({ children }) => {
+export const PublicOnlyRoute: React.FC<PublicOnlyRouteProps> = ({ children }) => {
   const isAuth = useSelector((state: RootState) => !!state.auth.accessToken);
 
   if (isAuth) {

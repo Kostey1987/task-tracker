@@ -4,11 +4,7 @@ import {
   useUpdateTaskMutation,
   useDeleteTaskMutation,
 } from "../services/tasksApi";
-import type { TaskInput } from "../types";
-
-interface UseTasksActionsProps {
-  onError?: (error: any) => void;
-}
+import type { TaskInput, UseTasksActionsProps } from "../types";
 
 export function useTasksActions({ onError }: UseTasksActionsProps = {}) {
   const [createTask, { isLoading: isCreating }] = useCreateTaskMutation();

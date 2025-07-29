@@ -7,18 +7,8 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import type { TaskStatus } from "../../types/index";
+import type { TaskStatus, TasksFiltersProps } from "../../types";
 import React from "react";
-
-interface TasksFiltersProps {
-  status: TaskStatus | null;
-  searchInput: string;
-  sortDeadline: "asc" | "desc";
-  onStatusChange: (status: TaskStatus | null) => void;
-  onSearchChange: (search: string) => void;
-  onSortChange: (sort: "asc" | "desc") => void;
-  isSearching?: boolean;
-}
 
 const STATUS_OPTIONS: TaskStatus[] = ["В работе", "Готово", "Просрочено"];
 

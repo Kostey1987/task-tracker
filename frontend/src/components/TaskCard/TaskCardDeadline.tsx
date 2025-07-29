@@ -1,13 +1,5 @@
 import { Text, TextInput } from "@mantine/core";
-
-interface TaskCardDeadlineProps {
-  isEditing: boolean;
-  isCreating: boolean;
-  deadlineInput: string;
-  setDeadlineInput: (value: string) => void;
-  deadlineError: string | null;
-  deadlineLabel?: string;
-}
+import type { TaskCardDeadlineProps } from "../../types";
 
 export function TaskCardDeadline({
   isEditing,

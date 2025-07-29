@@ -1,22 +1,6 @@
 import { useCallback } from "react";
 import { useDeleteTaskImageMutation } from "../services/tasksApi";
-import type { Task, TaskStatus } from "../types/index";
-
-interface UseTaskCardActionsProps {
-  taskId: number;
-  desc: string;
-  currentStatus: TaskStatus;
-  deadlineError: string | null;
-  file: File | null;
-  currentImage: string | null;
-  deadlineInput: string;
-  isCreating: boolean;
-  onChange?: (data: Partial<Task> & { file?: File | null }) => void;
-  onImageDeleted?: () => void;
-  onCancelEdit?: () => void;
-  getFormattedDeadlineForApi: () => string | null;
-  handleRemoveImage: () => void;
-}
+import type { Task, TaskStatus, UseTaskCardActionsProps } from "../types";
 
 export function useTaskCardActions({
   taskId,

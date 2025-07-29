@@ -1,13 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { TaskStatus } from "../types/index";
-
-interface UseTaskCardStateProps {
-  initialDescription: string;
-  initialStatus: TaskStatus;
-  isEditing: boolean;
-  isCreating: boolean;
-  onStateChange?: (description: string, status: TaskStatus) => void;
-}
+import type { TaskStatus, UseTaskCardStateProps } from "../types";
 
 export function useTaskCardState({
   initialDescription,

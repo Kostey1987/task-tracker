@@ -6,11 +6,7 @@ import { useLoginMutation } from "../services/authApi";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
-
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
+import type { LoginFormValues } from "../types";
 
 const emailRules: RegisterOptions<LoginFormValues> = {
   required: "Email обязателен",

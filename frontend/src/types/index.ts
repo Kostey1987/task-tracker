@@ -1,81 +1,14 @@
-// Типы для задач
-export type TaskStatus = "В работе" | "Готово" | "Просрочено";
+// Главный файл типов - экспортирует все типы из проекта
 
-export interface Task {
-  id: number;
-  description: string;
-  status: TaskStatus;
-  deadline: string | null;
-  image: string | null;
-  userId: number;
-}
+// API типы
+export * from "./api";
 
-// Типы для данных API
-export interface TasksData {
-  tasks: Task[];
-  totalPages: number;
-  currentPage: number;
-  totalTasks: number;
-}
+// Типы компонентов
+export * from "./components";
 
-// Типы для пропсов компонентов
-export interface TaskCardProps {
-  task: Task;
-  flags: {
-    isCreating?: boolean;
-    isEditing?: boolean;
-  };
-  callbacks: {
-    onChange?: (values: any) => void;
-    onCancel?: () => void;
-  };
-}
+// Типы хуков
+export * from "./hooks";
 
-// Типы для аутентификации
-export interface LoginFormValues {
-  email: string;
-  password: string;
-}
-
-export interface RegisterFormValues {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-export interface AuthState {
-  accessToken: string | null;
-  refreshToken: string | null;
-}
-
-// Типы для API
-export interface ApiResponse<T> {
-  data: T;
-  message?: string;
-}
-
-export interface PaginatedResponse<T> {
-  tasks: T[];
-  totalPages: number;
-  currentPage: number;
-  totalTasks: number;
-}
-
-export interface TokenResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
-// Типы для пользователя
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-export interface UserProfile {
-  id: number;
-  name: string;
-  email: string;
-}
+// Store типы
+export type RootState = ReturnType<typeof import("../store/store").store.getState>;
+export type AppDispatch = typeof import("../store/store").store.dispatch;

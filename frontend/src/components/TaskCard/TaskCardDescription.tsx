@@ -1,12 +1,5 @@
 import { Text, Textarea } from "@mantine/core";
-
-interface TaskCardDescriptionProps {
-  isEditing: boolean;
-  isCreating: boolean;
-  desc: string;
-  setDesc: (value: string) => void;
-  isMobile: boolean;
-}
+import type { TaskCardDescriptionProps } from "../../types";
 
 export function TaskCardDescription({
   isEditing,

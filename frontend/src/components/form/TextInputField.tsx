@@ -1,24 +1,9 @@
 import { TextInput } from "@mantine/core";
 import { useController } from "react-hook-form";
-import type {
-  Control,
-  FieldValues,
-  Path,
-  RegisterOptions,
-} from "react-hook-form";
+import type { TextInputFieldProps } from "../../types";
 
 // minHeight для одной строки ошибки
 const errorStyle = { minHeight: 20, color: "red", fontSize: 14, marginTop: 4 };
-
-type Props<T extends FieldValues> = {
-  name: Path<T>;
-  control: Control<T>;
-  label: string;
-  type?: string;
-  placeholder?: string;
-  rules?: RegisterOptions<T>;
-  autoComplete?: string;
-};
 
 export function TextInputField<T extends FieldValues>({
   name,
@@ -28,7 +13,7 @@ export function TextInputField<T extends FieldValues>({
   placeholder,
   rules,
   autoComplete,
-}: Props<T>) {
+}: TextInputFieldProps<T>) {
   const {
     field,
     fieldState: { error },

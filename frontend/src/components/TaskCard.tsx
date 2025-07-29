@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Card, Stack, useMantineTheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import type { Task } from "../types/index";
+import type { Task, TaskCardProps } from "../types";
 import { TaskCardHeader } from "./TaskCard/TaskCardHeader";
 import { TaskCardImage } from "./TaskCard/TaskCardImage";
 import { TaskCardDeadline } from "./TaskCard/TaskCardDeadline";
@@ -14,21 +14,6 @@ import {
   useTaskCardActions,
 } from "../hooks";
 import React from "react";
-
-interface TaskCardProps {
-  task: Task;
-  flags?: {
-    isEditing?: boolean;
-    isCreating?: boolean;
-  };
-  callbacks?: {
-    onChange?: (data: Partial<Task> & { file?: File | null }) => void;
-    onDelete?: () => void;
-    onEditClick?: () => void;
-    onCancelEdit?: () => void;
-    onImageDeleted?: () => void;
-  };
-}
 
 function TaskCardComponent({
   task,

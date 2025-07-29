@@ -1,14 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { TaskStatus } from "../types/index";
-
-interface UseTasksPageStateProps {
-  onFiltersChange?: (filters: {
-    page: number;
-    status: TaskStatus | null;
-    search: string;
-    sortDeadline: "asc" | "desc";
-  }) => void;
-}
+import type { TaskStatus, UseTasksPageStateProps } from "../types";
 
 export function useTasksPageState({
   onFiltersChange,

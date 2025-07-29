@@ -1,9 +1,5 @@
 import { useCallback } from "react";
-
-interface UseTasksRefetchProps {
-  refetch: () => void;
-  onSuccess?: () => void;
-}
+import type { UseTasksRefetchProps } from "../types";
 
 export function useTasksRefetch({ refetch, onSuccess }: UseTasksRefetchProps) {
   const refetchAndNotify = useCallback(() => {

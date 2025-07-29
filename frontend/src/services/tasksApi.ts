@@ -5,17 +5,8 @@ import type {
   GetTasksResponse,
   CreateTaskResponse,
   MessageResponse,
+  GetTasksParams,
 } from "../types";
-
-export interface GetTasksParams {
-  page?: number;
-  limit?: number;
-  status?: string | null;
-  deadlineFrom?: string;
-  deadlineTo?: string;
-  sortDeadline?: "asc" | "desc";
-  search?: string | null;
-}
 
 export const tasksApi = api.injectEndpoints({
   endpoints: (builder) => ({

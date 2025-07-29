@@ -18,23 +18,7 @@ import { setCredentials } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
 import { api } from "../services/api";
-
-interface RegisterFormValues {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
-
-interface AuthDrawerProps {
-  opened: boolean;
-  onClose: () => void;
-}
+import type { AuthDrawerProps, RegisterFormValues, LoginFormValues } from "../types";
 
 export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
   const [isLogin, setIsLogin] = useState(false);

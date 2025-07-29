@@ -1,15 +1,7 @@
 import { Image, Button, Group, Stack, Text, FileButton } from "@mantine/core";
 import { IconTrash, IconPhoto } from "@tabler/icons-react";
 import { getImageUrl } from "../../config/api";
-
-interface TaskCardImageProps {
-  currentImage: string | null;
-  isEditing: boolean;
-  isCreating: boolean;
-  onRemoveImage: () => void;
-  onFileChange: (file: File | null) => void;
-  imageError: string | null;
-}
+import type { TaskCardImageProps } from "../../types";
 
 export function TaskCardImage({
   currentImage,

@@ -1,18 +1,12 @@
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import type { UseDeadlineHandlerProps } from "../types";
 
-interface UseDeadlineHandlerProps {
-  initialDeadline: string | null;
-  isEditing: boolean;
-  isCreating: boolean;
-  onDeadlineChange?: (deadline: string | null) => void;
-}
-
-export function useDeadlineHandler({ 
-  initialDeadline, 
-  isEditing, 
-  isCreating, 
-  onDeadlineChange 
+export function useDeadlineHandler({
+  initialDeadline,
+  isEditing,
+  isCreating,
+  onDeadlineChange,
 }: UseDeadlineHandlerProps) {
   const [deadlineInput, setDeadlineInput] = useState(
     initialDeadline ? dayjs(initialDeadline).format("DD.MM.YYYY HH:mm") : ""
@@ -46,7 +40,7 @@ export function useDeadlineHandler({
     setDeadlineInput(value);
     const error = validateDeadline(value);
     setDeadlineError(error);
-    
+
     if (!error && value.trim()) {
       const formattedDeadline = formatDeadlineForApi(value);
       onDeadlineChange?.(formattedDeadline);
@@ -71,4 +65,4 @@ export function useDeadlineHandler({
     getFormattedDeadlineForApi,
     validateDeadline,
   };
-} 
+}
