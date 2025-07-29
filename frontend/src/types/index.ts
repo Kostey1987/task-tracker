@@ -10,18 +10,24 @@ export interface Task {
   userId: number;
 }
 
+// Типы для данных API
+export interface TasksData {
+  tasks: Task[];
+  totalPages: number;
+  currentPage: number;
+  totalTasks: number;
+}
+
+// Типы для пропсов компонентов
 export interface TaskCardProps {
   task: Task;
-  flags?: {
-    isEditing?: boolean;
+  flags: {
     isCreating?: boolean;
+    isEditing?: boolean;
   };
-  callbacks?: {
-    onChange?: (data: Partial<Task> & { file?: File | null }) => void;
-    onDelete?: () => void;
-    onEditClick?: () => void;
-    onCancelEdit?: () => void;
-    onImageDeleted?: () => void;
+  callbacks: {
+    onChange?: (values: any) => void;
+    onCancel?: () => void;
   };
 }
 

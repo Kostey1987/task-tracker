@@ -1,16 +1,15 @@
 import { Center, Text, Pagination } from "@mantine/core";
 import { TasksList } from "./TasksList";
 import { TaskCreationCard } from "./TaskCreationCard";
-import type { TaskInput } from "../../types";
+import type { GetTasksResponse, TaskInput } from "../../types";
+import { useTasksPageContent } from "../../hooks";
 
 interface TasksPageContentProps {
-  data: any;
+  data: GetTasksResponse;
   editingId: number | null;
   isCreatingCard: boolean;
-  hasTasks: boolean;
-  showPagination: boolean;
+  search: string | null;
   page: number;
-  emptyMessage: string;
   handleCreate: (
     values: Partial<TaskInput> & { file?: File | null }
   ) => Promise<void>;
@@ -30,10 +29,8 @@ export function TasksPageContent({
   data,
   editingId,
   isCreatingCard,
-  hasTasks,
-  showPagination,
+  search,
   page,
-  emptyMessage,
   handleCreate,
   handleCreateCardToggle,
   handleEditIdChange,
@@ -43,6 +40,22 @@ export function TasksPageContent({
   handlePageChange,
   refetch,
 }: TasksPageContentProps) {
+  const { emptyMessage, hasTasks, showPagination } = useTasksPageContent({
+    data,
+    editingId,
+    isCreatingCard,
+    search,
+    page,
+    handleCreate,
+    handleCreateCardToggle,
+    handleEditIdChange,
+    handleImageDeleted,
+    handleEditWithTask,
+    handleDeleteWithRefetch,
+    handlePageChange,
+    refetch,
+  });
+
   return (
     <>
       <TaskCreationCard

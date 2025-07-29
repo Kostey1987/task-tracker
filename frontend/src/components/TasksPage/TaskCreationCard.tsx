@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { TaskCard } from "../TaskCard";
-import type { TaskStatus } from "../../types/index";
-import type { TaskInput } from "../../types";
+import type { TaskStatus, TaskInput } from "../../types";
+import { useTasksRefetch } from "../../hooks";
 
 interface TaskCreationCardProps {
   isCreatingCard: boolean;
@@ -18,6 +18,13 @@ export function TaskCreationCard({
   handleCreateCardToggle,
   refetch,
 }: TaskCreationCardProps) {
+  const { refetchAndNotify } = useTasksRefetch({
+    refetch,
+    onSuccess: () => {
+      handleCreateCardToggle(false);
+    },
+  });
+
   const handleCreateTask = useCallback(
     async (values: Partial<TaskInput> & { file?: File | null }) => {
       if (!values.description || values.description.trim() === "") {
@@ -27,11 +34,10 @@ export function TaskCreationCard({
 
       if (values.description && values.status) {
         await handleCreate(values);
-        refetch();
-        handleCreateCardToggle(false);
+        refetchAndNotify();
       }
     },
-    [handleCreate, handleCreateCardToggle, refetch]
+    [handleCreate, handleCreateCardToggle, refetchAndNotify]
   );
 
   if (!isCreatingCard) return null;

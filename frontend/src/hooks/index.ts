@@ -5,3 +5,4 @@ export { useTaskCardActions } from "./useTaskCardActions";
 export { useTasksPageState } from "./useTasksPageState";
 export { useTasksActions } from "./useTasksActions";
 export { useTasksRefetch } from "./useTasksRefetch";
+export { useTasksPageContent } from "./useTasksPageContent";

@@ -5,7 +5,7 @@ import {
   TasksPageHeader,
   TasksPageContent,
 } from "../components/TasksPage";
-import type { TaskInput } from "../types";
+import type { TaskInput, GetTasksResponse } from "../types";
 import { Stack, Loader, Center, Alert } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { useTasksPageState, useTasksActions, useTasksRefetch } from "../hooks";
@@ -84,21 +84,6 @@ function TasksPageComponent() {
     return searchInput !== search;
   }, [searchInput, search]);
 
-  const emptyMessage = useMemo(() => {
-    if (search) {
-      return `Задачи по запросу "${search}" не найдены`;
-    }
-    return "Нет задач";
-  }, [search]);
-
-  const hasTasks = useMemo(() => {
-    return Boolean(data?.tasks.length);
-  }, [data?.tasks.length]);
-
-  const showPagination = useMemo(() => {
-    return Boolean(data && data.totalPages > 1);
-  }, [data?.totalPages]);
-
   // Состояния загрузки
   if (isLoading) {
     return (
@@ -146,13 +131,11 @@ function TasksPageComponent() {
       </Center>
 
       <TasksPageContent
-        data={data!}
+        data={data as GetTasksResponse}
         editingId={editingId}
         isCreatingCard={isCreatingCard}
-        hasTasks={hasTasks}
-        showPagination={showPagination}
+        search={search}
         page={page}
-        emptyMessage={emptyMessage}
         handleCreate={handleCreate}
         handleCreateCardToggle={handleCreateCardToggle}
         handleEditIdChange={handleEditIdChange}
