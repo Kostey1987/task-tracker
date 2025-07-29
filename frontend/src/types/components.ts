@@ -96,10 +96,10 @@ export interface TasksListProps {
 export interface TasksFiltersProps {
   status: TaskStatus | null;
   searchInput: string;
-  sortDeadline: "asc" | "desc" | null;
+  sortDeadline: "asc" | "desc";
   onStatusChange: (value: TaskStatus | null) => void;
   onSearchChange: (value: string) => void;
-  onSortChange: (value: "asc" | "desc" | null) => void;
+  onSortChange: (value: "asc" | "desc") => void;
   isSearching: boolean;
 }
 
