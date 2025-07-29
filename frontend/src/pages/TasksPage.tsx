@@ -6,7 +6,7 @@ import {
   useDeleteTaskMutation,
 } from "../services/tasksApi";
 import { TaskCard } from "../components/TaskCard";
-import type { TaskStatus } from "../components/TaskCard";
+import type { TaskStatus } from "../types/index";
 import {
   Stack,
   Title,
@@ -128,7 +128,6 @@ export default function TasksPage() {
       refetch();
     } catch (error) {
       console.error("Ошибка редактирования задачи:", error);
-      // ...
     }
   };
 

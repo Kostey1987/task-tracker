@@ -24,33 +24,8 @@ import {
   IconAlertTriangle,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { DatePickerInput } from "@mantine/dates";
 import { useDeleteTaskImageMutation } from "../services/tasksApi";
-
-export type TaskStatus = "В работе" | "Готово" | "Просрочено";
-
-export interface TaskCardProps {
-  id?: number;
-  description: string;
-  status: TaskStatus;
-  deadline?: string;
-  image?: string;
-  onChange?: (
-    data: Partial<{
-      description: string;
-      status: TaskStatus;
-      image?: string;
-      deadline?: string;
-      file?: File | null;
-    }>
-  ) => void;
-  isCreating?: boolean;
-  onDelete?: () => void;
-  isEditing?: boolean;
-  onEditClick?: () => void;
-  onCancelEdit?: () => void;
-  onImageDeleted?: () => void;
-}
+import type { TaskStatus, TaskCardProps } from "../types/index";
 
 export function TaskCard({
   id,
@@ -135,10 +110,6 @@ export function TaskCard({
         ...(file ? { file } : { image: currentImage }),
       });
     }
-  };
-
-  const handleStatusChange = (value: TaskStatus) => {
-    setCurrentStatus(value);
   };
 
   const handleFileChange = (file: File | null) => {
@@ -375,9 +346,8 @@ export function TaskCard({
                 variant="light"
                 {...props}
                 leftSection={<IconPhoto size={16} />}
-                // Сброс предупреждения при отмене редактирования
                 onBlur={() => {
-                  if (!isCreating && !isEditing) setImageError(null);
+                  if (!isCreating && !isEditing) return;
                 }}
               >
                 {currentImage
