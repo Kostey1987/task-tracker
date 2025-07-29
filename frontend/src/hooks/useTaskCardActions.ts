@@ -14,7 +14,7 @@ interface UseTaskCardActionsProps {
   onChange?: (data: Partial<Task> & { file?: File | null }) => void;
   onImageDeleted?: () => void;
   onCancelEdit?: () => void;
-  getFormattedDeadlineForApi: () => string | undefined;
+  getFormattedDeadlineForApi: () => string | null;
   handleRemoveImage: () => void;
 }
 
@@ -62,7 +62,7 @@ export function useTaskCardActions({
     onChange?.({
       description: desc.trim(),
       status: currentStatus,
-      deadline: deadlineInput ? getFormattedDeadlineForApi() : undefined,
+      deadline: deadlineInput ? getFormattedDeadlineForApi() : null,
       ...(file ? { file } : {}),
     });
   }, [

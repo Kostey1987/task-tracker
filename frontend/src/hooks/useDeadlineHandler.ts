@@ -5,7 +5,7 @@ interface UseDeadlineHandlerProps {
   initialDeadline: string | null;
   isEditing: boolean;
   isCreating: boolean;
-  onDeadlineChange?: (deadline: string | undefined) => void;
+  onDeadlineChange?: (deadline: string | null) => void;
 }
 
 export function useDeadlineHandler({ 
@@ -37,9 +37,9 @@ export function useDeadlineHandler({
     return null;
   };
 
-  const formatDeadlineForApi = (value: string): string | undefined => {
+  const formatDeadlineForApi = (value: string): string | null => {
     const parsed = dayjs(value, "DD.MM.YYYY HH:mm", true);
-    return parsed.isValid() ? parsed.format("YYYY-MM-DDTHH:mm") : undefined;
+    return parsed.isValid() ? parsed.format("YYYY-MM-DDTHH:mm") : null;
   };
 
   const handleDeadlineChange = (value: string) => {
@@ -51,7 +51,7 @@ export function useDeadlineHandler({
       const formattedDeadline = formatDeadlineForApi(value);
       onDeadlineChange?.(formattedDeadline);
     } else if (!value.trim()) {
-      onDeadlineChange?.(undefined);
+      onDeadlineChange?.(null);
     }
   };
 
@@ -59,7 +59,7 @@ export function useDeadlineHandler({
     setDeadlineError(null);
   };
 
-  const getFormattedDeadlineForApi = (): string | undefined => {
+  const getFormattedDeadlineForApi = (): string | null => {
     return formatDeadlineForApi(deadlineInput);
   };
 
