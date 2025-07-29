@@ -1,12 +1,13 @@
-import { Stack, Image, Button, Text, FileButton } from "@mantine/core";
+import { Image, Button, Group, Stack, Text, FileButton } from "@mantine/core";
 import { IconTrash, IconPhoto } from "@tabler/icons-react";
+import { getImageUrl } from "../../config/api";
 
 interface TaskCardImageProps {
   currentImage: string | null;
   isEditing: boolean;
   isCreating: boolean;
-  handleRemoveImage: () => void;
-  handleFileChange: (file: File | null) => void;
+  onRemoveImage: () => void;
+  onFileChange: (file: File | null) => void;
   imageError: string | null;
 }
 
@@ -14,38 +15,44 @@ export function TaskCardImage({
   currentImage,
   isEditing,
   isCreating,
-  handleRemoveImage,
-  handleFileChange,
+  onRemoveImage,
+  onFileChange,
   imageError,
 }: TaskCardImageProps) {
   return (
     <Stack>
       {currentImage && (
-        <Image
-          src={
-            currentImage.startsWith("/uploads/")
-              ? `http://localhost:5000${currentImage}`
-              : currentImage
-          }
-          alt="Task"
-          radius="md"
-          height={180}
-          fit="contain"
-        />
-      )}
-      {(isCreating || isEditing) && currentImage && (
-        <Button
-          variant="light"
-          color="red"
-          size="xs"
-          leftSection={<IconTrash size={16} />}
-          onClick={handleRemoveImage}
-        >
-          Удалить изображение
-        </Button>
+        <div style={{ position: "relative" }}>
+          <Image
+            src={getImageUrl(currentImage)}
+            alt="Task"
+            radius="md"
+            height={180}
+            fit="contain"
+          />
+          {(isCreating || isEditing) && (
+            <Group
+              style={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+              }}
+            >
+              <Button
+                size="xs"
+                color="red"
+                variant="filled"
+                onClick={onRemoveImage}
+                leftSection={<IconTrash size={12} />}
+              >
+                Удалить
+              </Button>
+            </Group>
+          )}
+        </div>
       )}
       {(isCreating || isEditing) && (
-        <FileButton onChange={handleFileChange} accept="image/*">
+        <FileButton onChange={onFileChange} accept="image/*">
           {(props) => (
             <Button
               variant="light"

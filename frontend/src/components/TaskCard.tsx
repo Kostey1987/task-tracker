@@ -183,8 +183,8 @@ function TaskCardComponent({
           currentImage={currentImage}
           isEditing={isEditing}
           isCreating={isCreating}
-          handleRemoveImage={handleRemoveImageFromServer}
-          handleFileChange={handleFileChange}
+          onRemoveImage={handleRemoveImageFromServer}
+          onFileChange={handleFileChange}
           imageError={imageError}
         />
         <TaskCardDescription

@@ -12,6 +12,26 @@
 - **Tabler Icons** — иконки интерфейса
 - **dayjs** — работа с датами и временем
 
+## Конфигурация
+
+### Переменные окружения
+
+Создайте файл `.env` в корне frontend директории:
+
+```bash
+# API Configuration
+VITE_API_URL=http://localhost:5000
+
+# Для production используйте:
+# VITE_API_URL=https://your-api-domain.com
+```
+
+### Настройка для разных окружений
+
+- **Development**: `VITE_API_URL=http://localhost:5000`
+- **Staging**: `VITE_API_URL=https://staging-api.example.com`
+- **Production**: `VITE_API_URL=https://api.example.com`
+
 ## Реализованный функционал
 
 - **Аутентификация**
@@ -42,11 +62,12 @@
    ```bash
    npm install
    ```
-2. Запустите dev-сервер:
+2. Создайте файл `.env` с настройками API (см. раздел "Конфигурация")
+3. Запустите dev-сервер:
    ```bash
    npm run dev
    ```
-3. Откройте [http://localhost:5173](http://localhost:5173) в браузере.
+4. Откройте [http://localhost:5173](http://localhost:5173) в браузере.
 
 ---
 
