@@ -1,11 +1,8 @@
-import { useState, useEffect } from "react";
-import {
-  useGetTasksQuery,
-  useCreateTaskMutation,
-  useUpdateTaskMutation,
-  useDeleteTaskMutation,
-} from "../services/tasksApi";
+import { useMemo, useCallback } from "react";
+import { useGetTasksQuery } from "../services/tasksApi";
 import { TaskCard } from "../components/TaskCard";
+import { TasksFilters } from "../components/TasksPage/TasksFilters";
+import { TasksList } from "../components/TasksPage/TasksList";
 import type { TaskStatus } from "../types/index";
 import type { TaskInput } from "../types";
 import {
@@ -14,114 +11,135 @@ import {
   Loader,
   Center,
   Alert,
-  Text,
   Button,
-  Select,
-  TextInput,
   Pagination,
-  Flex,
-  useMantineTheme,
+  Text,
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { IconAlertCircle, IconPlus } from "@tabler/icons-react";
+import { useTasksPageState, useTasksActions } from "../hooks";
+import React from "react";
 
-const STATUS_OPTIONS: TaskStatus[] = ["В работе", "Готово", "Просрочено"];
+function TasksPageComponent() {
+  // Хук для управления состоянием страницы
+  const {
+    page,
+    limit,
+    status,
+    searchInput,
+    search,
+    sortDeadline,
+    isCreatingCard,
+    editingId,
+    handleStatusChange,
+    handleSortChange,
+    handleSearchChange,
+    handlePageChange,
+    handleCreateCardToggle,
+    handleEditIdChange,
+  } = useTasksPageState();
 
-export default function TasksPage() {
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-  const [page, setPage] = useState(1);
-  const [limit] = useState(5);
-  const [status, setStatus] = useState<TaskStatus | null>(null);
-  const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
-  const [sortDeadline, setSortDeadline] = useState<"asc" | "desc">("asc");
-  const [isCreatingCard, setIsCreatingCard] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  // Хук для управления задачами
+  const { handleCreate, handleEdit, handleDelete, isCreating } =
+    useTasksActions({
+      onError: (error) => {
+        console.error("Ошибка операции с задачей:", error);
+      },
+    });
 
-  // Debounce для поиска
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearch(searchInput);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [searchInput]);
-
-  // Сброс страницы при изменении поиска или фильтров
-  useEffect(() => {
-    setPage(1);
-  }, [search, status, sortDeadline]);
-
+  // Запрос данных
   const { data, isLoading, error, refetch } = useGetTasksQuery({
     page,
     limit,
-    status: status || undefined,
-    search: search || undefined,
+    status: status || null,
+    search: search || null,
     sortDeadline: sortDeadline,
   });
-  const [createTask, { isLoading: isCreating }] = useCreateTaskMutation();
-  const [updateTask] = useUpdateTaskMutation();
-  const [deleteTask] = useDeleteTaskMutation();
 
-  const handleCreate = async (
-    values: Partial<TaskInput> & { file?: File | null }
-  ) => {
-    if (!values.description?.trim() || !values.status) return;
-    try {
-      const taskData: any = {
-        description: values.description.trim(),
-        status: values.status,
-        deadline: values.deadline,
-      };
-      if (values.file) {
-        taskData.file = values.file;
-      } else if (values.image) {
-        taskData.image = values.image;
+  // Обработчик создания задачи
+  const handleCreateTask = useCallback(
+    async (values: Partial<TaskInput> & { file?: File | null }) => {
+      if (!values.description || values.description.trim() === "") {
+        handleCreateCardToggle(false);
+        return;
       }
-      console.log("handleCreate: отправляемые данные:", taskData);
-      const result = await createTask(taskData).unwrap();
-      setIsCreatingCard(false);
-    } catch (error) {
-      console.error("Ошибка создания задачи:", error);
-      console.error("Failed to create task:", error);
-    }
-  };
 
-  const handleEdit = async (
-    id: number,
-    values: Partial<TaskInput> & { file?: File | null }
-  ) => {
-    const task = data?.tasks.find((t) => t.id === id);
-    if (!task) return;
-    const updateData: any = {
-      description: values.description ?? task.description,
-      status: values.status ?? task.status,
-      deadline: values.deadline ?? task.deadline,
-    };
-    if (values.file) {
-      updateData.file = values.file;
-    } else if (values.image) {
-      updateData.image = values.image;
-    }
-    console.log("handleEdit: отправляемые данные:", updateData);
-    try {
-      await updateTask({
-        id,
-        data: updateData,
-      }).unwrap();
-      setEditingId(null);
+      if (values.description && values.status) {
+        await handleCreate(values);
+        refetch();
+        handleCreateCardToggle(false);
+      }
+    },
+    [handleCreate, handleCreateCardToggle, refetch]
+  );
+
+  // Мемоизированная карточка создания
+  const createCard = useMemo(() => {
+    if (!isCreatingCard) return null;
+
+    return (
+      <TaskCard
+        task={{
+          id: -1,
+          description: "",
+          status: "В работе" as TaskStatus,
+          deadline: null,
+          image: null,
+          userId: 0,
+        }}
+        flags={{ isCreating: true }}
+        callbacks={{
+          onChange: handleCreateTask,
+        }}
+      />
+    );
+  }, [isCreatingCard, handleCreateTask]);
+
+  // Оптимизированные обработчики
+  const handleEditWithTask = useCallback(
+    async (id: number, values: Partial<TaskInput> & { file?: File | null }) => {
+      const task = data?.tasks.find((t) => t.id === id);
+      if (!task) return;
+
+      await handleEdit(id, values, task);
       refetch();
-    } catch (error) {
-      console.error("Ошибка редактирования задачи:", error);
-    }
-  };
+      handleEditIdChange(null);
+    },
+    [handleEdit, data?.tasks, refetch, handleEditIdChange]
+  );
 
-  const handleDelete = async (id: number) => {
-    await deleteTask(id).unwrap();
+  const handleDeleteWithRefetch = useCallback(
+    async (id: number) => {
+      await handleDelete(id);
+      refetch();
+    },
+    [handleDelete, refetch]
+  );
+
+  const handleImageDeleted = useCallback(() => {
     refetch();
-  };
+  }, [refetch]);
 
+  // Мемоизированные вычисления
+  const isSearching = useMemo(() => {
+    return searchInput !== search;
+  }, [searchInput, search]);
+
+  const emptyMessage = useMemo(() => {
+    if (search) {
+      return `Задачи по запросу "${search}" не найдены`;
+    }
+    return "Нет задач";
+  }, [search]);
+
+  const hasTasks = useMemo(() => {
+    return Boolean(data?.tasks.length);
+  }, [data?.tasks.length]);
+
+  const showPagination = useMemo(() => {
+    return Boolean(data && data.totalPages > 1);
+  }, [data?.totalPages]);
+
+  // Состояния загрузки
   if (isLoading) {
     return (
       <Center h="100vh">
@@ -152,135 +170,60 @@ export default function TasksPage() {
       <Title order={2} ta="center" mb="md">
         Список задач
       </Title>
+
       <Center mb="md">
-        <Flex
-          gap={isMobile ? "sm" : "md"}
-          align="flex-end"
-          direction={isMobile ? "column" : "row"}
-          w="100%"
-          maw={isMobile ? 400 : 600}
-        >
-          <Select
-            label="Статус"
-            data={[
-              { value: "", label: "Все" },
-              ...STATUS_OPTIONS.map((s) => ({ value: s, label: s })),
-            ]}
-            value={status || ""}
-            onChange={(v) => setStatus((v as TaskStatus) || null)}
-            w={isMobile ? "100%" : "auto"}
-            maw={isMobile ? "100%" : 120}
-            styles={{
-              label: {
-                whiteSpace: "nowrap",
-              },
-            }}
-          />
-          <Select
-            label="Сортировка по дедлайну"
-            data={[
-              { value: "asc", label: "По возрастанию" },
-              { value: "desc", label: "По убыванию" },
-            ]}
-            value={sortDeadline}
-            onChange={(v) => setSortDeadline((v as "asc" | "desc") || "asc")}
-            w={isMobile ? "100%" : "auto"}
-            maw={isMobile ? "100%" : 200}
-            styles={{
-              label: {
-                whiteSpace: "nowrap",
-              },
-            }}
-          />
-          <TextInput
-            label="Поиск по описанию"
-            placeholder="Введите текст для поиска..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.currentTarget.value)}
-            rightSection={searchInput !== search ? <Loader size="xs" /> : null}
-            rightSectionWidth={20}
-            w={isMobile ? "100%" : "auto"}
-            maw={isMobile ? "100%" : 200}
-            styles={{
-              input: {
-                height: 36,
-              },
-              label: {
-                whiteSpace: "nowrap",
-              },
-            }}
-          />
-        </Flex>
+        <TasksFilters
+          status={status}
+          searchInput={searchInput}
+          sortDeadline={sortDeadline}
+          onStatusChange={handleStatusChange}
+          onSearchChange={handleSearchChange}
+          onSortChange={handleSortChange}
+          isSearching={isSearching}
+        />
       </Center>
+
       <Center mb="md">
         <Button
           leftSection={<IconPlus size={16} />}
-          onClick={() => setIsCreatingCard(true)}
-          disabled={isCreatingCard}
+          onClick={() => handleCreateCardToggle(true)}
+          disabled={isCreatingCard || isCreating}
+          loading={isCreating}
         >
           Новая задача
         </Button>
       </Center>
-      {isCreatingCard && (
-        <TaskCard
-          task={{
-            id: -1, // временный id для новой задачи
-            description: "",
-            status: "В работе" as TaskStatus,
-            deadline: null,
-            image: null,
-            userId: 0, // временный userId для новой задачи
-          }}
-          flags={{ isCreating: true }}
-          callbacks={{
-            onChange: async (values) => {
-              if (!values.description || values.description.trim() === "") {
-                setIsCreatingCard(false);
-              } else if (values.description && values.status) {
-                await handleCreate(values);
-              }
-            },
-          }}
+
+      {createCard}
+
+      {hasTasks ? (
+        <TasksList
+          tasks={data!.tasks}
+          editingId={editingId}
+          onEditClick={handleEditIdChange}
+          onCancelEdit={() => handleEditIdChange(null)}
+          onImageDeleted={handleImageDeleted}
+          onEdit={handleEditWithTask}
+          onDelete={handleDeleteWithRefetch}
         />
-      )}
-      {data?.tasks.length ? (
-        data.tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={{
-              ...task,
-              status: task.status as TaskStatus,
-            }}
-            flags={{ isEditing: editingId === task.id }}
-            callbacks={{
-              onEditClick: () => setEditingId(task.id!),
-              onCancelEdit: () => setEditingId(null),
-              onImageDeleted: () => refetch(),
-              onChange:
-                editingId === task.id
-                  ? async (values) => {
-                      await handleEdit(task.id!, values);
-                    }
-                  : undefined,
-              onDelete: () => handleDelete(task.id!),
-            }}
-          />
-        ))
       ) : (
         <Center>
           <Text color="dimmed" size="lg">
-            {search ? `Задачи по запросу "${search}" не найдены` : "Нет задач"}
+            {emptyMessage}
           </Text>
         </Center>
       )}
-      {data && data.totalPages > 1 && (
+
+      {showPagination && (
         <Pagination
           value={page}
-          onChange={setPage}
-          total={data.totalPages}
+          onChange={handlePageChange}
+          total={data!.totalPages}
           mt="md"
         />
       )}
     </Stack>
   );
 }
+
+export default React.memo(TasksPageComponent);

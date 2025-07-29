@@ -10,11 +10,11 @@ import type {
 export interface GetTasksParams {
   page?: number;
   limit?: number;
-  status?: string;
+  status?: string | null;
   deadlineFrom?: string;
   deadlineTo?: string;
   sortDeadline?: "asc" | "desc";
-  search?: string;
+  search?: string | null;
 }
 
 export const tasksApi = api.injectEndpoints({
@@ -25,11 +25,11 @@ export const tasksApi = api.injectEndpoints({
         const searchParams = new URLSearchParams();
         if (p.page) searchParams.set("page", String(p.page));
         if (p.limit) searchParams.set("limit", String(p.limit));
-        if (p.status) searchParams.set("status", p.status);
+        if (p.status != null) searchParams.set("status", p.status);
         if (p.deadlineFrom) searchParams.set("deadlineFrom", p.deadlineFrom);
         if (p.deadlineTo) searchParams.set("deadlineTo", p.deadlineTo);
         if (p.sortDeadline) searchParams.set("sortDeadline", p.sortDeadline);
-        if (p.search) searchParams.set("search", p.search);
+        if (p.search != null) searchParams.set("search", p.search);
         const query = searchParams.toString();
         return `/tasks${query ? `?${query}` : ""}`;
       },
