@@ -92,9 +92,9 @@ router.get("/", async (req, res) => {
       req.userId,
       page,
       limit,
-      status || undefined,
-      deadlineFrom || undefined,
-      deadlineTo || undefined,
+      status || null,
+      deadlineFrom || null,
+      deadlineTo || null,
       sortDeadline,
       search
     );

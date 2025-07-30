@@ -31,29 +31,29 @@ export async function getTasks(
   userId: number,
   page: number,
   limit: number,
-  status?: string,
-  deadlineFrom?: string,
-  deadlineTo?: string,
-  sortDeadline?: "asc" | "desc",
-  search?: string
+  status?: string | null,
+  deadlineFrom?: string | null,
+  deadlineTo?: string | null,
+  sortDeadline?: "asc" | "desc" | null,
+  search?: string | null
 ) {
   const db = await getDb();
   const offset = (page - 1) * limit;
   let query = "SELECT * FROM tasks WHERE user_id = ?";
   const params: any[] = [userId];
-  if (status) {
+  if (status != null) {
     query += " AND status = ?";
     params.push(status);
   }
-  if (deadlineFrom) {
+  if (deadlineFrom != null) {
     query += " AND deadline >= ?";
     params.push(deadlineFrom);
   }
-  if (deadlineTo) {
+  if (deadlineTo != null) {
     query += " AND deadline <= ?";
     params.push(deadlineTo);
   }
-  if (search) {
+  if (search != null) {
     query += " AND description LIKE ?";
     params.push(`%${search}%`);
   }
@@ -69,19 +69,19 @@ export async function getTasks(
   // Для корректного total учитываем фильтры
   let countQuery = "SELECT COUNT(*) as count FROM tasks WHERE user_id = ?";
   const countParams: any[] = [userId];
-  if (status) {
+  if (status != null) {
     countQuery += " AND status = ?";
     countParams.push(status);
   }
-  if (deadlineFrom) {
+  if (deadlineFrom != null) {
     countQuery += " AND deadline >= ?";
     countParams.push(deadlineFrom);
   }
-  if (deadlineTo) {
+  if (deadlineTo != null) {
     countQuery += " AND deadline <= ?";
     countParams.push(deadlineTo);
   }
-  if (search) {
+  if (search != null) {
     countQuery += " AND description LIKE ?";
     countParams.push(`%${search}%`);
   }
@@ -110,7 +110,7 @@ export async function updateTask(taskId: number, updates: Partial<Task>) {
     fields.push("deadline = ?");
     values.push(updates.deadline);
   }
-  if (updates.image !== undefined) {
+  if (updates.image != null) {
     fields.push("image = ?");
     values.push(updates.image);
   }

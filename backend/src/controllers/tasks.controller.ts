@@ -16,20 +16,20 @@ export const getTasks = async (
   userId: number,
   page: number,
   limit: number,
-  status?: string,
-  deadlineFrom?: string,
-  deadlineTo?: string,
-  sortDeadline?: "asc" | "desc",
-  search?: string
+  status?: string | null,
+  deadlineFrom?: string | null,
+  deadlineTo?: string | null,
+  sortDeadline?: "asc" | "desc" | null,
+  search?: string | null
 ) => {
   return getTasksModel(
     userId,
     page,
     limit,
-    status || undefined,
-    deadlineFrom || undefined,
-    deadlineTo || undefined,
-    sortDeadline || undefined,
+    status || null,
+    deadlineFrom || null,
+    deadlineTo || null,
+    sortDeadline || null,
     search
   );
 };
