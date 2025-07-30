@@ -8,21 +8,25 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import type { TaskStatus, TasksFiltersProps } from "../../types/types-exports";
+import { useTasksUI } from "../../hooks/hooks-exports";
 import React from "react";
 
 const STATUS_OPTIONS: TaskStatus[] = ["В работе", "Готово", "Просрочено"];
 
-function TasksFiltersComponent({
-  status,
-  searchInput,
-  sortDeadline,
-  onStatusChange,
-  onSearchChange,
-  onSortChange,
-  isSearching = false,
-}: TasksFiltersProps) {
+function TasksFiltersComponent({}: TasksFiltersProps) {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+
+  // Получаем состояние UI из Redux
+  const {
+    status,
+    searchInput,
+    sortDeadline,
+    isSearching,
+    handleStatusChange,
+    handleSearchChange,
+    handleSortChange,
+  } = useTasksUI();
 
   // Мемоизированные данные для селектов
   const statusData = useMemo(
@@ -75,7 +79,7 @@ function TasksFiltersComponent({
         label="Статус"
         data={statusData}
         value={status || ""}
-        onChange={(v) => onStatusChange((v as TaskStatus) || null)}
+        onChange={(v) => handleStatusChange((v as TaskStatus) || null)}
         w={isMobile ? "100%" : "auto"}
         maw={isMobile ? "100%" : 120}
         styles={commonStyles}
@@ -84,7 +88,7 @@ function TasksFiltersComponent({
         label="Сортировка по дедлайну"
         data={sortData}
         value={sortDeadline}
-        onChange={(v) => onSortChange((v as "asc" | "desc") || "asc")}
+        onChange={(v) => handleSortChange((v as "asc" | "desc") || "asc")}
         w={isMobile ? "100%" : "auto"}
         maw={isMobile ? "100%" : 200}
         styles={commonStyles}
@@ -93,7 +97,7 @@ function TasksFiltersComponent({
         label="Поиск по описанию"
         placeholder="Введите текст для поиска..."
         value={searchInput}
-        onChange={(e) => onSearchChange(e.currentTarget.value)}
+        onChange={(e) => handleSearchChange(e.currentTarget.value)}
         rightSection={isSearching ? <Loader size="xs" /> : null}
         rightSectionWidth={20}
         w={isMobile ? "100%" : "auto"}

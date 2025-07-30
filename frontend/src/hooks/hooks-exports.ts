@@ -6,3 +6,4 @@ export { useTasksPageState } from "./useTasksPageState";
 export { useTasksActions } from "./useTasksActions";
 export { useTasksRefetch } from "./useTasksRefetch";
 export { useTasksPageContent } from "./useTasksPageContent";
+export { useTasksUI } from "./useTasksUI";

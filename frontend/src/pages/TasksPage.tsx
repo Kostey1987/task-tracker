@@ -9,30 +9,22 @@ import type { TaskInput, GetTasksResponse } from "../types/types-exports";
 import { Stack, Loader, Center, Alert } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import {
-  useTasksPageState,
   useTasksActions,
   useTasksRefetch,
+  useTasksUI,
 } from "../hooks/hooks-exports";
 import React from "react";
 
 function TasksPageComponent() {
-  // Хук для управления состоянием страницы
+  // Хук для управления состоянием UI из Redux
   const {
     page,
-    limit,
     status,
     searchInput,
     search,
     sortDeadline,
-    isCreatingCard,
-    editingId,
-    handleStatusChange,
-    handleSortChange,
-    handleSearchChange,
-    handlePageChange,
-    handleCreateCardToggle,
     handleEditIdChange,
-  } = useTasksPageState();
+  } = useTasksUI();
 
   // Хук для управления задачами
   const { handleCreate, handleEdit, handleDelete, isCreating } =
@@ -45,7 +37,7 @@ function TasksPageComponent() {
   // Запрос данных
   const { data, isLoading, error, refetch } = useGetTasksQuery({
     page,
-    limit,
+    limit: 5,
     status: status || null,
     search: search || null,
     sortDeadline: sortDeadline,
@@ -83,11 +75,6 @@ function TasksPageComponent() {
     refetchAndNotify();
   }, [refetchAndNotify]);
 
-  // Мемоизированные вычисления
-  const isSearching = useMemo(() => {
-    return searchInput !== search;
-  }, [searchInput, search]);
-
   // Состояния загрузки
   if (isLoading) {
     return (
@@ -116,37 +103,18 @@ function TasksPageComponent() {
         boxShadow: "var(--mantine-shadow-sm)",
       }}
     >
-      <TasksPageHeader
-        isCreatingCard={isCreatingCard}
-        isCreating={isCreating}
-        onCreateClick={() => handleCreateCardToggle(true)}
-      />
+      <TasksPageHeader isCreating={isCreating} />
 
       <Center mb="md">
-        <TasksFilters
-          status={status}
-          searchInput={searchInput}
-          sortDeadline={sortDeadline}
-          onStatusChange={handleStatusChange}
-          onSearchChange={handleSearchChange}
-          onSortChange={handleSortChange}
-          isSearching={isSearching}
-        />
+        <TasksFilters />
       </Center>
 
       <TasksPageContent
         data={data as GetTasksResponse}
-        editingId={editingId}
-        isCreatingCard={isCreatingCard}
-        search={search}
-        page={page}
         handleCreate={handleCreate}
-        handleCreateCardToggle={handleCreateCardToggle}
-        handleEditIdChange={handleEditIdChange}
         handleImageDeleted={handleImageDeleted}
         handleEditWithTask={handleEditWithTask}
         handleDeleteWithRefetch={handleDeleteWithRefetch}
-        handlePageChange={handlePageChange}
         refetch={refetch}
       />
     </Stack>

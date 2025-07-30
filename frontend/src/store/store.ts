@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
+import tasksUIReducer from "./tasksUISlice";
 import { api } from "../services/api";
 import {
   persistStore,
@@ -16,11 +17,12 @@ import storage from "redux-persist/lib/storage";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth"],
+  whitelist: ["auth", "tasksUI"],
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  tasksUI: tasksUIReducer,
   [api.reducerPath]: api.reducer,
 });
 

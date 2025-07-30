@@ -2,23 +2,25 @@ import { Center, Text, Pagination } from "@mantine/core";
 import { TasksList } from "./TasksList";
 import { TaskCreationCard } from "./TaskCreationCard";
 import type { TasksPageContentProps } from "../../types/types-exports";
-import { useTasksPageContent } from "../../hooks/hooks-exports";
+import { useTasksPageContent, useTasksUI } from "../../hooks/hooks-exports";
 
 export function TasksPageContent({
   data,
-  editingId,
-  isCreatingCard,
-  search,
-  page,
   handleCreate,
-  handleCreateCardToggle,
-  handleEditIdChange,
   handleImageDeleted,
   handleEditWithTask,
   handleDeleteWithRefetch,
-  handlePageChange,
   refetch,
 }: TasksPageContentProps) {
+  // Получаем состояние UI из Redux
+  const {
+    search,
+    page,
+    handlePageChange,
+    handleCreateCardToggle,
+    handleEditIdChange,
+  } = useTasksUI();
+
   const { emptyMessage, hasTasks, showPagination } = useTasksPageContent({
     data,
     search,
@@ -27,7 +29,6 @@ export function TasksPageContent({
   return (
     <>
       <TaskCreationCard
-        isCreatingCard={isCreatingCard}
         handleCreate={handleCreate}
         handleCreateCardToggle={handleCreateCardToggle}
         refetch={refetch}
@@ -36,7 +37,6 @@ export function TasksPageContent({
       {hasTasks ? (
         <TasksList
           tasks={data.tasks}
-          editingId={editingId}
           onEditClick={handleEditIdChange}
           onCancelEdit={() => handleEditIdChange(null)}
           onImageDeleted={handleImageDeleted}

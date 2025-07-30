@@ -4,14 +4,16 @@ import type {
   TaskStatus,
   TaskCreationCardProps,
 } from "../../types/types-exports";
-import { useTasksRefetch } from "../../hooks/hooks-exports";
+import { useTasksRefetch, useTasksUI } from "../../hooks/hooks-exports";
 
 export function TaskCreationCard({
-  isCreatingCard,
   handleCreate,
   handleCreateCardToggle,
   refetch,
 }: TaskCreationCardProps) {
+  // Получаем состояние UI из Redux
+  const { isCreatingCard } = useTasksUI();
+
   const { refetchAndNotify } = useTasksRefetch({
     refetch,
     onSuccess: () => {

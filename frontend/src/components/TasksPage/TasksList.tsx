@@ -6,17 +6,20 @@ import type {
   TaskStatus,
   TasksListProps,
 } from "../../types/types-exports";
+import { useTasksUI } from "../../hooks/hooks-exports";
 import React from "react";
 
 function TasksListComponent({
   tasks,
-  editingId,
   onEditClick,
   onCancelEdit,
   onImageDeleted,
   onEdit,
   onDelete,
 }: TasksListProps) {
+  // Получаем состояние UI из Redux
+  const { editingId } = useTasksUI();
+
   // Мемоизированный список задач
   const taskCards = useMemo(() => {
     return tasks.map((task) => (

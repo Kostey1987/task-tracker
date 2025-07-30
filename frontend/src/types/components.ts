@@ -62,50 +62,41 @@ export interface TaskCardActionsProps {
 
 // TasksPage и его подкомпоненты
 export interface TasksPageHeaderProps {
-  isCreatingCard: boolean;
   isCreating: boolean;
-  onCreateClick: () => void;
 }
 
 export interface TasksPageContentProps {
   data: GetTasksResponse;
-  editingId: number | null;
-  isCreatingCard: boolean;
-  search: string | null;
-  page: number;
-  handleCreate: (values: Partial<TaskInput> & { file?: File | null }) => Promise<void>;
-  handleCreateCardToggle: (value: boolean) => void;
-  handleEditIdChange: (id: number | null) => void;
+  handleCreate: (
+    values: Partial<TaskInput> & { file?: File | null }
+  ) => Promise<void>;
   handleImageDeleted: () => void;
-  handleEditWithTask: (id: number, values: Partial<TaskInput> & { file?: File | null }) => Promise<void>;
+  handleEditWithTask: (
+    id: number,
+    values: Partial<TaskInput> & { file?: File | null }
+  ) => Promise<void>;
   handleDeleteWithRefetch: (id: number) => Promise<void>;
-  handlePageChange: (page: number) => void;
   refetch: () => void;
 }
 
 export interface TasksListProps {
   tasks: Task[];
-  editingId: number | null;
   onEditClick: (id: number) => void;
   onCancelEdit: () => void;
   onImageDeleted: () => void;
-  onEdit: (id: number, values: Partial<TaskInput> & { file?: File | null }) => Promise<void>;
+  onEdit: (
+    id: number,
+    values: Partial<TaskInput> & { file?: File | null }
+  ) => Promise<void>;
   onDelete: (id: number) => Promise<void>;
 }
 
-export interface TasksFiltersProps {
-  status: TaskStatus | null;
-  searchInput: string;
-  sortDeadline: "asc" | "desc";
-  onStatusChange: (value: TaskStatus | null) => void;
-  onSearchChange: (value: string) => void;
-  onSortChange: (value: "asc" | "desc") => void;
-  isSearching: boolean;
-}
+export interface TasksFiltersProps {}
 
 export interface TaskCreationCardProps {
-  isCreatingCard: boolean;
-  handleCreate: (values: Partial<TaskInput> & { file?: File | null }) => Promise<void>;
+  handleCreate: (
+    values: Partial<TaskInput> & { file?: File | null }
+  ) => Promise<void>;
   handleCreateCardToggle: (value: boolean) => void;
   refetch: () => void;
 }
@@ -155,4 +146,9 @@ export interface ProfileFormValues {
 
 // Импорты для типов
 import type { Task, TaskStatus, TaskInput, GetTasksResponse } from "./api";
-import type { FieldValues, Path, Control, RegisterOptions } from "react-hook-form"; 
+import type {
+  FieldValues,
+  Path,
+  Control,
+  RegisterOptions,
+} from "react-hook-form";
