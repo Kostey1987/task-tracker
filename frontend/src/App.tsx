@@ -58,7 +58,7 @@ function App() {
                   component="a"
                   href="/tasks"
                   size={isVerySmall ? "xs" : isMobile ? "xs" : "sm"}
-                  px={isVerySmall ? "xs" : undefined}
+                  px={isVerySmall ? "xs" : "sm"}
                 >
                   {isVerySmall ? "Задачи" : "Задачи"}
                 </Button>
@@ -67,7 +67,7 @@ function App() {
                   component="a"
                   href="/userProfile"
                   size={isVerySmall ? "xs" : isMobile ? "xs" : "sm"}
-                  px={isVerySmall ? "xs" : undefined}
+                  px={isVerySmall ? "xs" : "sm"}
                 >
                   {isVerySmall ? "Профиль" : "Профиль"}
                 </Button>
@@ -75,7 +75,7 @@ function App() {
                   variant="outline"
                   onClick={handleLogout}
                   size={isVerySmall ? "xs" : isMobile ? "xs" : "sm"}
-                  px={isVerySmall ? "xs" : undefined}
+                  px={isVerySmall ? "xs" : "sm"}
                 >
                   {isVerySmall ? "Выйти" : "Выйти"}
                 </Button>
