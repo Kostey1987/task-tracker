@@ -3,6 +3,7 @@ import { TaskCard } from "../TaskCard";
 import type {
   TaskStatus,
   TaskCreationCardProps,
+  TaskInput,
 } from "../../types/types-exports";
 import { useTasksRefetch, useTasksUI } from "../../hooks/hooks-exports";
 

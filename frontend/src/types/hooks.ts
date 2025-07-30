@@ -40,16 +40,6 @@ export interface UseTaskCardActionsProps {
   handleRemoveImage: () => void;
 }
 
-// useTasksPageState
-export interface UseTasksPageStateProps {
-  onFiltersChange?: (filters: {
-    page: number;
-    status: TaskStatus | null;
-    search: string;
-    sortDeadline: "asc" | "desc";
-  }) => void;
-}
-
 // useTasksActions
 export interface UseTasksActionsProps {
   onError?: (error: unknown) => void;
@@ -68,4 +58,4 @@ export interface UseTasksPageContentProps {
 }
 
 // Импорты для типов
-import type { Task, TaskStatus, TaskInput, GetTasksResponse } from "./api"; 
+import type { Task, TaskStatus, TaskInput, GetTasksResponse } from "./api";

@@ -17,13 +17,13 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "./store/store";
 import { logout } from "./store/authSlice";
 import { api } from "./services/api";
 import UserProfilePage from "./pages/UserProfilePage";
 import TasksPage from "./pages/TasksPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import AuthDrawer from "./components/AuthDrawer";
+import type { RootState } from "./types/types-exports";
 
 function App() {
   const theme = useMantineTheme();

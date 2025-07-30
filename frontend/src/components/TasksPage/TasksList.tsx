@@ -1,11 +1,7 @@
 import { useMemo } from "react";
 import { Center, Text } from "@mantine/core";
 import { TaskCard } from "../TaskCard";
-import type {
-  Task,
-  TaskStatus,
-  TasksListProps,
-} from "../../types/types-exports";
+import type { TaskStatus, TasksListProps } from "../../types/types-exports";
 import { useTasksUI } from "../../hooks/hooks-exports";
 import React from "react";
 

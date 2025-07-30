@@ -7,7 +7,6 @@ import {
   setSortDeadline,
   setCreatingCard,
   setEditingId,
-  resetFilters,
   updateSearchFromInput,
 } from "../store/tasksUISlice";
 import type { RootState, TaskStatus } from "../types/types-exports";
@@ -69,10 +68,6 @@ export function useTasksUI() {
     [dispatch]
   );
 
-  const handleResetFilters = useCallback(() => {
-    dispatch(resetFilters());
-  }, [dispatch]);
-
   return {
     // Состояние
     page: tasksUI.page,
@@ -92,6 +87,5 @@ export function useTasksUI() {
     handlePageChange,
     handleCreateCardToggle,
     handleEditIdChange,
-    handleResetFilters,
   };
 }

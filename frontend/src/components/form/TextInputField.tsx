@@ -1,5 +1,5 @@
 import { TextInput } from "@mantine/core";
-import { useController } from "react-hook-form";
+import { useController, type FieldValues } from "react-hook-form";
 import type { TextInputFieldProps } from "../../types/types-exports";
 
 // minHeight для одной строки ошибки

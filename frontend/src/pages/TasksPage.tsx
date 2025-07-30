@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useCallback } from "react";
 import { useGetTasksQuery } from "../services/tasksApi";
 import {
   TasksFilters,
@@ -17,14 +17,8 @@ import React from "react";
 
 function TasksPageComponent() {
   // Хук для управления состоянием UI из Redux
-  const {
-    page,
-    status,
-    searchInput,
-    search,
-    sortDeadline,
-    handleEditIdChange,
-  } = useTasksUI();
+  const { page, status, search, sortDeadline, handleEditIdChange } =
+    useTasksUI();
 
   // Хук для управления задачами
   const { handleCreate, handleEdit, handleDelete, isCreating } =
