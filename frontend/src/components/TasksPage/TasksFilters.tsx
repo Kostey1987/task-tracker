@@ -7,13 +7,13 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import type { TaskStatus, TasksFiltersProps } from "../../types/types-exports";
+import type { TaskStatus } from "../../types/types-exports";
 import { useTasksUI } from "../../hooks/hooks-exports";
 import React from "react";
 
 const STATUS_OPTIONS: TaskStatus[] = ["В работе", "Готово", "Просрочено"];
 
-function TasksFiltersComponent({}: TasksFiltersProps) {
+function TasksFiltersComponent() {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 

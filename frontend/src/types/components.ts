@@ -1,6 +1,7 @@
 // Типы для компонентов
 
 // TaskCard и его подкомпоненты
+/** Пропсы для компонента карточки задачи */
 export interface TaskCardProps {
   task: Task;
   flags?: {
@@ -16,6 +17,7 @@ export interface TaskCardProps {
   };
 }
 
+/** Пропсы для компонента изображения в карточке задачи */
 export interface TaskCardImageProps {
   currentImage: string | null;
   isEditing: boolean;
@@ -25,6 +27,7 @@ export interface TaskCardImageProps {
   imageError: string | null;
 }
 
+/** Пропсы для заголовка карточки задачи */
 export interface TaskCardHeaderProps {
   currentStatus: TaskStatus;
   isEditing: boolean;
@@ -33,6 +36,7 @@ export interface TaskCardHeaderProps {
   onDelete?: () => void;
 }
 
+/** Пропсы для описания в карточке задачи */
 export interface TaskCardDescriptionProps {
   isEditing: boolean;
   isCreating: boolean;
@@ -41,6 +45,7 @@ export interface TaskCardDescriptionProps {
   isMobile: boolean;
 }
 
+/** Пропсы для дедлайна в карточке задачи */
 export interface TaskCardDeadlineProps {
   isEditing: boolean;
   isCreating: boolean;
@@ -50,6 +55,7 @@ export interface TaskCardDeadlineProps {
   deadlineLabel?: string;
 }
 
+/** Пропсы для действий в карточке задачи */
 export interface TaskCardActionsProps {
   isEditing: boolean;
   isCreating: boolean;
@@ -61,10 +67,12 @@ export interface TaskCardActionsProps {
 }
 
 // TasksPage и его подкомпоненты
+/** Пропсы для заголовка страницы задач */
 export interface TasksPageHeaderProps {
   isCreating: boolean;
 }
 
+/** Пропсы для основного контента страницы задач */
 export interface TasksPageContentProps {
   data: GetTasksResponse;
   handleCreate: (
@@ -79,6 +87,7 @@ export interface TasksPageContentProps {
   refetch: () => void;
 }
 
+/** Пропсы для списка задач */
 export interface TasksListProps {
   tasks: Task[];
   onEditClick: (id: number) => void;
@@ -91,8 +100,7 @@ export interface TasksListProps {
   onDelete: (id: number) => Promise<void>;
 }
 
-export interface TasksFiltersProps {}
-
+/** Пропсы для карточки создания задачи */
 export interface TaskCreationCardProps {
   handleCreate: (
     values: Partial<TaskInput> & { file?: File | null }
@@ -102,21 +110,25 @@ export interface TaskCreationCardProps {
 }
 
 // AuthDrawer
+/** Пропсы для модального окна аутентификации */
 export interface AuthDrawerProps {
   opened: boolean;
   onClose: () => void;
 }
 
 // Routes
+/** Пропсы для защищенного маршрута (требует аутентификации) */
 export interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
+/** Пропсы для публичного маршрута (только для неавторизованных) */
 export interface PublicOnlyRouteProps {
   children: React.ReactNode;
 }
 
 // Form components
+/** Пропсы для текстового поля формы */
 export interface TextInputFieldProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
@@ -128,11 +140,13 @@ export interface TextInputFieldProps<T extends FieldValues> {
 }
 
 // Pages
+/** Значения формы входа */
 export interface LoginFormValues {
   email: string;
   password: string;
 }
 
+/** Значения формы регистрации */
 export interface RegisterFormValues {
   name: string;
   email: string;
@@ -140,6 +154,7 @@ export interface RegisterFormValues {
   confirmPassword: string;
 }
 
+/** Значения формы профиля */
 export interface ProfileFormValues {
   name: string;
 }

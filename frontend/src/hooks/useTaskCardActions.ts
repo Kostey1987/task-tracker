@@ -1,10 +1,6 @@
 import { useCallback } from "react";
 import { useDeleteTaskImageMutation } from "../services/tasksApi";
-import type {
-  Task,
-  TaskStatus,
-  UseTaskCardActionsProps,
-} from "../types/types-exports";
+import type { UseTaskCardActionsProps } from "../types/types-exports";
 
 export function useTaskCardActions({
   taskId,

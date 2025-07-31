@@ -1,14 +1,17 @@
 // API типы
 
 // Базовые типы
+/** Статус задачи - возможные значения */
 export type TaskStatus = "В работе" | "Готово" | "Просрочено";
 
+/** Пользователь системы */
 export interface User {
   id?: number;
   name: string;
   email: string;
 }
 
+/** Задача в системе */
 export interface Task {
   id: number;
   description: string;
@@ -18,7 +21,8 @@ export interface Task {
   userId: number;
 }
 
-// Входные данные
+// Входные данные для API
+/** Данные для создания/обновления задачи */
 export interface TaskInput {
   description: string;
   status?: TaskStatus;
@@ -26,18 +30,21 @@ export interface TaskInput {
   image: string | null;
 }
 
+/** Данные для регистрации пользователя */
 export interface RegisterInput {
   name: string;
   email: string;
   password: string;
 }
 
+/** Данные для входа пользователя */
 export interface LoginInput {
   email: string;
   password: string;
 }
 
 // API ответы
+/** Ответ на аутентификацию (логин/регистрация) */
 export interface AuthResponse {
   token: {
     accessToken: string;
@@ -45,6 +52,7 @@ export interface AuthResponse {
   };
 }
 
+/** Ответ на запрос списка задач с пагинацией */
 export interface GetTasksResponse {
   tasks: Task[];
   total: number;
@@ -52,32 +60,18 @@ export interface GetTasksResponse {
   totalPages: number;
 }
 
+/** Ответ на создание задачи */
 export interface CreateTaskResponse {
   id: number;
 }
 
+/** Общий ответ с сообщением */
 export interface MessageResponse {
   message: string;
 }
 
-export interface TokenResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
-export interface ApiResponse<T> {
-  data: T;
-  message?: string;
-}
-
-export interface PaginatedResponse<T> {
-  tasks: T[];
-  totalPages: number;
-  currentPage: number;
-  totalTasks: number;
-}
-
 // Параметры запросов
+/** Параметры для получения списка задач */
 export interface GetTasksParams {
   page?: number;
   limit?: number;
@@ -89,14 +83,16 @@ export interface GetTasksParams {
 }
 
 // Состояние аутентификации
+/** Состояние аутентификации в Redux store */
 export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
 }
 
 // Профиль пользователя
+/** Профиль пользователя */
 export interface UserProfile {
   id: number;
   name: string;
   email: string;
-} 
+}

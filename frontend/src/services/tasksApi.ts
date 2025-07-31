@@ -28,7 +28,7 @@ export const tasksApi = api.injectEndpoints({
     }),
     getTask: builder.query<Task, number>({
       query: (id) => `/tasks/${id}`,
-      providesTags: (result, error, id) => [{ type: "Tasks", id }],
+      providesTags: (_result, _error, id) => [{ type: "Tasks", id }],
     }),
     createTask: builder.mutation<
       CreateTaskResponse,

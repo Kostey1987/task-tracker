@@ -1,11 +1,4 @@
-import {
-  Button,
-  Paper,
-  Stack,
-  Title,
-  Flex,
-  useMantineTheme,
-} from "@mantine/core";
+import { Button, Paper, Stack, Title, useMantineTheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler, RegisterOptions } from "react-hook-form";
