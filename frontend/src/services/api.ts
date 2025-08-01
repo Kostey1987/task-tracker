@@ -54,7 +54,10 @@ const baseQueryWithReauth: BaseQueryFn<
 
         if (refreshResult.data) {
           const { accessToken, refreshToken: newRefreshToken } =
-            refreshResult.data as any;
+            refreshResult.data as {
+              accessToken: string;
+              refreshToken: string;
+            };
           console.log("Token refreshed successfully");
           api.dispatch(
             setCredentials({ accessToken, refreshToken: newRefreshToken })
