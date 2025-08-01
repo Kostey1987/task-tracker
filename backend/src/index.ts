@@ -13,10 +13,11 @@ async function startServer() {
     await initDb();
     console.log("Database initialized");
 
-    const HOST = process.env.HOST || "0.0.0.0";
+    // Для локальной разработки всегда используем localhost, независимо от NODE_ENV
+    const isDev = !process.env.PORT || process.env.PORT === "5000";
+    const HOST = isDev ? "localhost" : process.env.HOST || "0.0.0.0";
 
     app.listen(PORT, HOST, () => {
-      const isDev = process.env.NODE_ENV !== "production";
       const localUrl = `http://localhost:${PORT}`;
       const serverUrl = isDev ? localUrl : `http://${HOST}:${PORT}`;
 

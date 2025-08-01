@@ -1,7 +1,7 @@
 // Конфигурация окружений
 // Определяем API URL в зависимости от окружения
 function getApiUrl(): string {
-  // Если указан VITE_API_URL, используем его
+  // Если указан VITE_API_URL, используем его (для production)
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
