@@ -10,9 +10,25 @@ import path from "path";
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:5173", // Development
+  "http://localhost:3000", // Alternative dev port
+  process.env.FRONTEND_URL, // Production frontend URL
+].filter(Boolean); // Убираем undefined значения
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      // Разрешаем запросы без origin (например, Postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.log(`Blocked origin: ${origin}`);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );

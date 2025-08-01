@@ -16,14 +16,20 @@
 
 ### Переменные окружения
 
-Создайте файл `.env` в корне frontend директории:
+Скопируйте `env.example` в `.env` и настройте переменные:
+
+#### Development (.env)
 
 ```bash
-# API Configuration
-VITE_API_URL=http://localhost:5000
+# Оставьте пустым для автоматического использования localhost:5000
+VITE_API_URL=
+```
 
-# Для production используйте:
-# VITE_API_URL=https://your-api-domain.com
+#### Production (.env)
+
+```bash
+# Укажите URL вашего backend API
+VITE_API_URL=https://your-backend-domain.com
 ```
 
 ### Настройка для разных окружений

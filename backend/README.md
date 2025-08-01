@@ -31,11 +31,28 @@ backend/
   .env             # Переменные окружения
 ```
 
-## Переменные окружения (.env)
+## Переменные окружения
 
-```
-JWT_SECRET=your_super_secret_key
+Скопируйте `env.example` в `.env` и настройте переменные:
+
+### Development (.env)
+
+```bash
 PORT=5000
+HOST=0.0.0.0
+NODE_ENV=development
+JWT_SECRET=your_super_secret_key
+FRONTEND_URL=http://localhost:5173
+```
+
+### Production (.env)
+
+```bash
+PORT=5000
+HOST=0.0.0.0
+NODE_ENV=production
+JWT_SECRET=your_very_secure_secret_key
+FRONTEND_URL=https://your-frontend-domain.com
 ```
 
 ## Команды для терминала

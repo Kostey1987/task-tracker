@@ -1,12 +1,28 @@
 // Конфигурация окружений
+// Определяем API URL в зависимости от окружения
+function getApiUrl(): string {
+  // Если указан VITE_API_URL, используем его
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+
+  // В development используем localhost
+  if (import.meta.env.DEV) {
+    return "http://localhost:5000";
+  }
+
+  // В production используем относительный путь (тот же домен)
+  return "/api";
+}
+
 export const ENV_CONFIG = {
-  // API Configuration (optional - has default value)
-  API_URL: import.meta.env.VITE_API_URL || "http://localhost:5000",
+  // API Configuration
+  API_URL: getApiUrl(),
 
   // Environment
   NODE_ENV: import.meta.env.NODE_ENV || "development",
-  IS_DEVELOPMENT: import.meta.env.NODE_ENV === "development",
-  IS_PRODUCTION: import.meta.env.NODE_ENV === "production",
+  IS_DEVELOPMENT: import.meta.env.DEV,
+  IS_PRODUCTION: import.meta.env.PROD,
 
   // App Configuration
   APP_NAME: "Task Tracker",

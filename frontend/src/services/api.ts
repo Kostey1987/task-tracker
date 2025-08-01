@@ -6,9 +6,10 @@ import type {
 } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../types/types-exports";
 import { setCredentials, logout } from "../store/authSlice";
+import { API_CONFIG } from "../config/api";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api",
+  baseUrl: `${API_CONFIG.BASE_URL}/api`,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.accessToken;
