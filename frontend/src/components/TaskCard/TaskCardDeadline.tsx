@@ -1,4 +1,5 @@
 import { Text, TextInput } from "@mantine/core";
+import dayjs from "dayjs";
 import type { TaskCardDeadlineProps } from "../../types/types-exports";
 
 export function TaskCardDeadline({
@@ -16,19 +17,25 @@ export function TaskCardDeadline({
         label={deadlineLabel}
         value={deadlineInput}
         onChange={(e) => setDeadlineInput(e.currentTarget.value)}
-        placeholder="ДД.ММ.ГГГГ ЧЧ:ММ"
+        placeholder="ГГГГ-ММ-ДД ЧЧ:ММ"
         error={deadlineError}
         withAsterisk
       />
     );
   }
+
+  // Для отображения в режиме просмотра форматируем дату в читаемый вид
+  const displayDeadline = deadlineInput
+    ? dayjs(deadlineInput, "YYYY-MM-DDTHH:mm").format("DD.MM.YYYY HH:mm")
+    : "-";
+
   return (
     <Text
       color={deadlineError ? "red" : undefined}
       size="sm"
       fw={deadlineError ? 600 : 400}
     >
-      {deadlineLabel}: {deadlineInput || "-"}
+      {deadlineLabel}: {displayDeadline}
     </Text>
   );
 }
