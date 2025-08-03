@@ -9,7 +9,9 @@
 - **Redux Toolkit** — современное управление состоянием
 - **RTK Query** — асинхронные запросы и кэширование данных
 - **Redux Persist** — сохранение состояния (токены) между сессиями
-- **Tabler Icons** — иконки интерфейса
+- **React Icons** — иконки интерфейса
+- **React Hook Form** — управление формами
+- **React Router DOM** — маршрутизация
 - **dayjs** — работа с датами и временем
 
 ## Конфигурация
@@ -21,8 +23,9 @@
 #### Development (.env)
 
 ```bash
-# URL вашего backend API
-VITE_API_URL=http://localhost:5000
+# URL вашего backend API (оставьте пустым - автоматически будет использоваться http://localhost:5000)
+VITE_API_URL=
+VITE_APP_VERSION=1.0.0
 ```
 
 #### Production (.env)
@@ -34,7 +37,7 @@ VITE_API_URL=https://your-backend-domain.com
 
 ### Настройка для разных окружений
 
-- **Development**: `VITE_API_URL=http://localhost:5000`
+- **Development**: `VITE_API_URL=` (пустое значение - автоматически используется http://localhost:5000)
 - **Staging**: `VITE_API_URL=https://staging-api.example.com`
 - **Production**: `VITE_API_URL=https://api.example.com`
 
@@ -94,11 +97,13 @@ frontend/
     assets/        # Статические ресурсы
   public/          # Публичные файлы
   dist/            # Собранное приложение
+  index.html       # Главный HTML файл
 ```
 
 ## Примечания
 
 - Все переменные окружения должны начинаться с `VITE_`
+- `VITE_API_URL` в development режиме можно оставить пустым - приложение автоматически использует `http://localhost:5000`
 - При деплое измените `VITE_API_URL` на реальный URL backend
 - Приложение автоматически обрабатывает ошибки авторизации
 - Redux Persist сохраняет токены между сессиями браузера

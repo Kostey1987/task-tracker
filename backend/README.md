@@ -9,6 +9,7 @@
 - JWT (jsonwebtoken)
 - bcryptjs
 - express-validator
+- express-rate-limit
 - dotenv
 - multer (загрузка файлов)
 - sharp (проверка изображений)
@@ -39,9 +40,9 @@ backend/
 
 ```bash
 PORT=5000
-HOST=localhost
+HOST=0.0.0.0
 NODE_ENV=development
-JWT_SECRET=your_super_secret_key
+JWT_SECRET=your_super_secret_key_change_in_production
 FRONTEND_URL=http://localhost:5173
 ```
 
@@ -161,4 +162,5 @@ npm start           # Запуск собранного JS-кода из dist/
 - После logout refresh token становится невалидным.
 - Для загрузки/редактирования изображения используйте тип запроса `form-data`.
 - В development режиме сервер слушает на `localhost`, в production на `0.0.0.0`.
-- CORS настроен для работы с frontend на `http://localhost:5173` (development) и указанным `FRONTEND_URL` (production).
+- CORS настроен для работы с frontend на `http://localhost:5173` и `http://localhost:3000` (development) и указанным `FRONTEND_URL` (production).
+- Настроен rate limiting: максимум 10000 запросов в минуту с одного IP.
