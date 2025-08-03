@@ -12,6 +12,7 @@ export function TaskCardDeadline({
   if (isCreating || isEditing) {
     return (
       <TextInput
+        type="datetime-local"
         label={deadlineLabel}
         value={deadlineInput}
         onChange={(e) => setDeadlineInput(e.currentTarget.value)}

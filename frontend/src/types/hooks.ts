@@ -65,4 +65,4 @@ export interface UseTasksPageContentProps {
 }
 
 // Импорты для типов
-import type { Task, TaskStatus, GetTasksResponse } from "./api";
+import type { Task, TaskStatus, GetTasksResponse } from "./apiTypes";

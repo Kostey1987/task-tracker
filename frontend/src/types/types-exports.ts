@@ -1,7 +1,7 @@
 // Главный файл типов - экспортирует все типы из проекта
 
 // API типы
-export * from "./api";
+export * from "./apiTypes";
 
 // Типы компонентов
 export * from "./components";

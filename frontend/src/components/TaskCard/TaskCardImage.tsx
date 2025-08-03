@@ -1,6 +1,6 @@
 import { Image, Button, Group, Stack, Text, FileButton } from "@mantine/core";
 import { IconTrash, IconPhoto } from "@tabler/icons-react";
-import { getImageUrl } from "../../config/api";
+import { getImageUrl } from "../../config/apiConfig";
 import type { TaskCardImageProps } from "../../types/types-exports";
 
 export function TaskCardImage({

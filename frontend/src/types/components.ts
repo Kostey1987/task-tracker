@@ -160,7 +160,7 @@ export interface ProfileFormValues {
 }
 
 // Импорты для типов
-import type { Task, TaskStatus, TaskInput, GetTasksResponse } from "./api";
+import type { Task, TaskStatus, TaskInput, GetTasksResponse } from "./apiTypes";
 import type {
   FieldValues,
   Path,

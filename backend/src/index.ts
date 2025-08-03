@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 // Загрузка переменных окружения
 dotenv.config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT || "5000", 10);
 
 // Инициализация и запуск сервера
 async function startServer() {
