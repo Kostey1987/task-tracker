@@ -39,7 +39,7 @@ backend/
 
 ```bash
 PORT=5000
-HOST=0.0.0.0
+HOST=localhost
 NODE_ENV=development
 JWT_SECRET=your_super_secret_key
 FRONTEND_URL=http://localhost:5173
@@ -158,5 +158,7 @@ npm start           # Запуск собранного JS-кода из dist/
 - Access токен живёт 15 минут, refresh токен — до logout или повторного логина.
 - Для всех защищённых маршрутов требуется заголовок `Authorization: Bearer <accessToken>`.
 - Для обновления access токена используйте refresh токен.
-- После logout refresh токен становится невалидным.
+- После logout refresh token становится невалидным.
 - Для загрузки/редактирования изображения используйте тип запроса `form-data`.
+- В development режиме сервер слушает на `localhost`, в production на `0.0.0.0`.
+- CORS настроен для работы с frontend на `http://localhost:5173` (development) и указанным `FRONTEND_URL` (production).
