@@ -9,22 +9,11 @@ export interface TaskCardProps {
     isCreating?: boolean;
   };
   callbacks?: {
-    onChange?: (data: Partial<Task> & { file?: File | null }) => void;
+    onChange?: (data: Partial<Task>) => void;
     onDelete?: () => void;
     onEditClick?: () => void;
     onCancelEdit?: () => void;
-    onImageDeleted?: () => void;
   };
-}
-
-/** Пропсы для компонента изображения в карточке задачи */
-export interface TaskCardImageProps {
-  currentImage: string | null;
-  isEditing: boolean;
-  isCreating: boolean;
-  onRemoveImage: () => void;
-  onFileChange: (file: File | null) => void;
-  imageError: string | null;
 }
 
 /** Пропсы для заголовка карточки задачи */
@@ -75,14 +64,8 @@ export interface TasksPageHeaderProps {
 /** Пропсы для основного контента страницы задач */
 export interface TasksPageContentProps {
   data: GetTasksResponse;
-  handleCreate: (
-    values: Partial<TaskInput> & { file?: File | null }
-  ) => Promise<void>;
-  handleImageDeleted: () => void;
-  handleEditWithTask: (
-    id: number,
-    values: Partial<TaskInput> & { file?: File | null }
-  ) => Promise<void>;
+  handleCreate: (values: Partial<TaskInput>) => Promise<void>;
+  handleEditWithTask: (id: number, values: Partial<TaskInput>) => Promise<void>;
   handleDeleteWithRefetch: (id: number) => Promise<void>;
   refetch: () => void;
 }
@@ -92,19 +75,13 @@ export interface TasksListProps {
   tasks: Task[];
   onEditClick: (id: number) => void;
   onCancelEdit: () => void;
-  onImageDeleted: () => void;
-  onEdit: (
-    id: number,
-    values: Partial<TaskInput> & { file?: File | null }
-  ) => Promise<void>;
+  onEdit: (id: number, values: Partial<TaskInput>) => Promise<void>;
   onDelete: (id: number) => Promise<void>;
 }
 
 /** Пропсы для карточки создания задачи */
 export interface TaskCreationCardProps {
-  handleCreate: (
-    values: Partial<TaskInput> & { file?: File | null }
-  ) => Promise<void>;
+  handleCreate: (values: Partial<TaskInput>) => Promise<void>;
   handleCreateCardToggle: (value: boolean) => void;
   refetch: () => void;
 }

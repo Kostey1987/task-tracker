@@ -9,7 +9,6 @@ function TasksListComponent({
   tasks,
   onEditClick,
   onCancelEdit,
-  onImageDeleted,
   onEdit,
   onDelete,
 }: TasksListProps) {
@@ -29,7 +28,6 @@ function TasksListComponent({
         callbacks={{
           onEditClick: () => onEditClick(task.id!),
           onCancelEdit,
-          onImageDeleted,
           onChange:
             editingId === task.id
               ? async (values) => {
@@ -40,15 +38,7 @@ function TasksListComponent({
         }}
       />
     ));
-  }, [
-    tasks,
-    editingId,
-    onEditClick,
-    onCancelEdit,
-    onImageDeleted,
-    onEdit,
-    onDelete,
-  ]);
+  }, [tasks, editingId, onEditClick, onCancelEdit, onEdit, onDelete]);
 
   if (tasks.length === 0) {
     return (

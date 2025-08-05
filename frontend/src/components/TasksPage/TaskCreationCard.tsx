@@ -23,7 +23,7 @@ export function TaskCreationCard({
   });
 
   const handleCreateTask = useCallback(
-    async (values: Partial<TaskInput> & { file?: File | null }) => {
+    async (values: Partial<TaskInput>) => {
       if (!values.description || values.description.trim() === "") {
         handleCreateCardToggle(false);
         return;
@@ -46,7 +46,6 @@ export function TaskCreationCard({
         description: "",
         status: "В работе" as TaskStatus,
         deadline: null,
-        image: null,
         userId: 0,
       }}
       flags={{ isCreating: true }}

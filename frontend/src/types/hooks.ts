@@ -9,13 +9,6 @@ export interface UseDeadlineHandlerProps {
   onDeadlineChange?: (deadline: string | null) => void;
 }
 
-// useImageHandler
-/** Пропсы для хука обработки изображений */
-export interface UseImageHandlerProps {
-  initialImage: string | null;
-  onImageChange?: (file: File | null, image: string | null) => void;
-}
-
 // useTaskCardState
 /** Пропсы для хука управления состоянием карточки задачи */
 export interface UseTaskCardStateProps {
@@ -33,15 +26,11 @@ export interface UseTaskCardActionsProps {
   desc: string;
   currentStatus: TaskStatus;
   deadlineError: string | null;
-  file: File | null;
-  currentImage: string | null;
   deadlineInput: string;
   isCreating: boolean;
-  onChange?: (data: Partial<Task> & { file?: File | null }) => void;
-  onImageDeleted?: () => void;
+  onChange?: (data: Partial<Task>) => void;
   onCancelEdit?: () => void;
   getFormattedDeadlineForApi: () => string | null;
-  handleRemoveImage: () => void;
 }
 
 // useTasksActions

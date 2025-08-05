@@ -8,19 +8,17 @@ export interface Task {
    * Дата и время дедлайна в формате YYYY-MM-DDTHH:mm (ISO 8601, без секунд)
    */
   deadline?: string;
-  image: string | null;
   userId: number;
 }
 
 export async function createTask(task: Task): Promise<number> {
   const db = await getDb();
   const result = await db.run(
-    "INSERT INTO tasks (description, deadline, status, image, user_id) VALUES (?, ?, ?, ?, ?)",
+    "INSERT INTO tasks (description, deadline, status, user_id) VALUES (?, ?, ?, ?)",
     [
       task.description,
       task.deadline || null,
       task.status || "В работе",
-      task.image || null,
       task.userId,
     ]
   );
@@ -110,10 +108,7 @@ export async function updateTask(taskId: number, updates: Partial<Task>) {
     fields.push("deadline = ?");
     values.push(updates.deadline);
   }
-  if (updates.image != null) {
-    fields.push("image = ?");
-    values.push(updates.image);
-  }
+
   if (fields.length === 0) throw new Error("No fields to update");
   values.push(taskId);
   await db.run(`UPDATE tasks SET ${fields.join(", ")} WHERE id = ?`, values);
@@ -122,12 +117,4 @@ export async function updateTask(taskId: number, updates: Partial<Task>) {
 export async function deleteTask(taskId: number) {
   const db = await getDb();
   await db.run("DELETE FROM tasks WHERE id = ?", [taskId]);
-}
-
-export async function removeTaskImage(taskId: number): Promise<string | null> {
-  const db = await getDb();
-  const task = await db.get("SELECT image FROM tasks WHERE id = ?", [taskId]);
-  if (!task || !task.image) return null;
-  await db.run("UPDATE tasks SET image = NULL WHERE id = ?", [taskId]);
-  return task.image;
 }

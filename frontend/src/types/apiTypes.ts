@@ -17,7 +17,6 @@ export interface Task {
   description: string;
   status: TaskStatus;
   deadline: string | null;
-  image: string | null;
   userId: number;
 }
 
@@ -27,7 +26,6 @@ export interface TaskInput {
   description: string;
   status?: TaskStatus;
   deadline: string | null;
-  image: string | null;
 }
 
 /** Данные для регистрации пользователя */

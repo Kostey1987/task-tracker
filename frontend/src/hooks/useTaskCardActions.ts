@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { useDeleteTaskImageMutation } from "../services/tasksApi";
 import type { UseTaskCardActionsProps } from "../types/types-exports";
 
 export function useTaskCardActions({
@@ -7,18 +6,12 @@ export function useTaskCardActions({
   desc,
   currentStatus,
   deadlineError,
-  file,
-  currentImage,
   deadlineInput,
   isCreating,
   onChange,
-  onImageDeleted,
   onCancelEdit,
   getFormattedDeadlineForApi,
-  handleRemoveImage,
 }: UseTaskCardActionsProps) {
-  const [deleteTaskImage] = useDeleteTaskImageMutation();
-
   const handleSave = useCallback(() => {
     const error = deadlineError;
     if (error) return;
@@ -27,7 +20,6 @@ export function useTaskCardActions({
       description: desc,
       status: currentStatus,
       deadline: getFormattedDeadlineForApi(),
-      ...(file ? { file } : currentImage ? { image: currentImage } : {}),
     });
   }, [
     deadlineError,
@@ -35,8 +27,6 @@ export function useTaskCardActions({
     desc,
     currentStatus,
     getFormattedDeadlineForApi,
-    file,
-    currentImage,
   ]);
 
   const handleCreate = useCallback(() => {
@@ -47,7 +37,6 @@ export function useTaskCardActions({
       description: desc.trim(),
       status: currentStatus,
       deadline: deadlineInput ? getFormattedDeadlineForApi() : null,
-      ...(file ? { file } : {}),
     });
   }, [
     deadlineError,
@@ -56,18 +45,7 @@ export function useTaskCardActions({
     currentStatus,
     deadlineInput,
     getFormattedDeadlineForApi,
-    file,
   ]);
-
-  const handleRemoveImageFromServer = useCallback(async () => {
-    try {
-      await deleteTaskImage(taskId).unwrap();
-      handleRemoveImage();
-      onImageDeleted?.();
-    } catch (error) {
-      console.error("Ошибка удаления изображения:", error);
-    }
-  }, [deleteTaskImage, taskId, handleRemoveImage, onImageDeleted]);
 
   const handleCancel = useCallback(() => {
     isCreating
@@ -78,7 +56,6 @@ export function useTaskCardActions({
   return {
     handleSave,
     handleCreate,
-    handleRemoveImageFromServer,
     handleCancel,
   };
 }

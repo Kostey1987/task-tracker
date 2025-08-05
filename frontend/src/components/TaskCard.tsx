@@ -3,12 +3,10 @@ import { Card, Stack, useMantineTheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import type { TaskCardProps } from "../types/types-exports";
 import { TaskCardHeader } from "./TaskCard/TaskCardHeader";
-import { TaskCardImage } from "./TaskCard/TaskCardImage";
 import { TaskCardDeadline } from "./TaskCard/TaskCardDeadline";
 import { TaskCardDescription } from "./TaskCard/TaskCardDescription";
 import { TaskCardActions } from "./TaskCard/TaskCardActions";
 import {
-  useImageHandler,
   useDeadlineHandler,
   useTaskCardState,
   useTaskCardActions,
@@ -20,16 +18,9 @@ function TaskCardComponent({
   flags = {},
   callbacks = {},
 }: TaskCardProps) {
-  const {
-    id,
-    description = "",
-    status = "В работе",
-    deadline = null,
-    image = null,
-  } = task;
+  const { id, description = "", status = "В работе", deadline = null } = task;
   const { isEditing = false, isCreating = false } = flags;
-  const { onChange, onDelete, onEditClick, onCancelEdit, onImageDeleted } =
-    callbacks;
+  const { onChange, onDelete, onEditClick, onCancelEdit } = callbacks;
 
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
@@ -42,18 +33,6 @@ function TaskCardComponent({
       isEditing,
       isCreating,
     });
-
-  // Хук для обработки изображений
-  const {
-    currentImage,
-    file,
-    imageError,
-    handleFileChange,
-    handleRemoveImage,
-    resetImageError,
-  } = useImageHandler({
-    initialImage: image,
-  });
 
   // Хук для обработки дедлайнов
   const {
@@ -69,25 +48,16 @@ function TaskCardComponent({
   });
 
   // Хук для обработки действий
-  const {
-    handleSave,
-    handleCreate,
-    handleRemoveImageFromServer,
-    handleCancel,
-  } = useTaskCardActions({
+  const { handleSave, handleCreate, handleCancel } = useTaskCardActions({
     taskId: id,
     desc,
     currentStatus,
     deadlineError,
-    file,
-    currentImage,
     deadlineInput,
     isCreating,
     onChange,
-    onImageDeleted,
     onCancelEdit,
     getFormattedDeadlineForApi,
-    handleRemoveImage,
   });
 
   // Мемоизированные стили карточки
@@ -134,11 +104,10 @@ function TaskCardComponent({
   // Мемоизированный обработчик отмены с сбросом ошибок
   const handleCancelWithReset = useMemo(() => {
     return () => {
-      resetImageError();
       resetDeadlineError();
       handleCancel();
     };
-  }, [resetImageError, resetDeadlineError, handleCancel]);
+  }, [resetDeadlineError, handleCancel]);
 
   return (
     <Card
@@ -164,14 +133,7 @@ function TaskCardComponent({
           setDeadlineInput={handleDeadlineChange}
           deadlineError={deadlineError}
         />
-        <TaskCardImage
-          currentImage={currentImage}
-          isEditing={isEditing}
-          isCreating={isCreating}
-          onRemoveImage={handleRemoveImageFromServer}
-          onFileChange={handleFileChange}
-          imageError={imageError}
-        />
+
         <TaskCardDescription
           isEditing={isEditing}
           isCreating={isCreating}

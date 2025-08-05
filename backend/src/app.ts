@@ -13,6 +13,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173", // Development
   "http://localhost:3000", // Alternative dev port
+  "https://*.vercel.app", // Все Vercel домены
+  "https://*.onrender.com", // Все Render домены
   process.env.FRONTEND_URL, // Production frontend URL
 ].filter(Boolean); // Убираем undefined значения
 
@@ -22,12 +24,18 @@ app.use(
       // Разрешаем запросы без origin (например, Postman)
       if (!origin) return callback(null, true);
 
+      // Проверяем точное совпадение
       if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        console.log(`Blocked origin: ${origin}`);
-        callback(new Error("Not allowed by CORS"));
+        return callback(null, true);
       }
+
+      // Проверяем wildcard домены
+      if (origin.endsWith(".vercel.app") || origin.endsWith(".onrender.com")) {
+        return callback(null, true);
+      }
+
+      console.log(`Blocked origin: ${origin}`);
+      callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
   })
@@ -42,9 +50,6 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 app.use(limiter);
-
-// Раздача статики для изображений
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Routes
 app.use("/api/auth", authRoutes);

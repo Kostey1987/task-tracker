@@ -7,7 +7,6 @@ import { useTasksPageContent, useTasksUI } from "../../hooks/hooks-exports";
 export function TasksPageContent({
   data,
   handleCreate,
-  handleImageDeleted,
   handleEditWithTask,
   handleDeleteWithRefetch,
   refetch,
@@ -39,7 +38,6 @@ export function TasksPageContent({
           tasks={data.tasks}
           onEditClick={handleEditIdChange}
           onCancelEdit={() => handleEditIdChange(null)}
-          onImageDeleted={handleImageDeleted}
           onEdit={handleEditWithTask}
           onDelete={handleDeleteWithRefetch}
         />
