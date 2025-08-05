@@ -1,0 +1,12 @@
+[1mdiff --git a/frontend/package.json b/frontend/package.json[m
+[1mindex d151c95..924d05c 100644[m
+[1m--- a/frontend/package.json[m
+[1m+++ b/frontend/package.json[m
+[36m@@ -16,6 +16,7 @@[m
+     "@mantine/form": "^8.2.1",[m
+     "@mantine/hooks": "^8.2.1",[m
+     "@reduxjs/toolkit": "^2.8.2",[m
+[32m+[m[32m    "@tabler/icons-react": "^3.1.0",[m
+     "dayjs": "^1.11.13",[m
+     "react": "^18.2.0",[m
+     "react-dom": "^18.2.0",[m
