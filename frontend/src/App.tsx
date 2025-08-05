@@ -24,11 +24,11 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import AuthDrawer from "./components/AuthDrawer";
 import type { RootState } from "./types/types-exports";
 
-// Lazy load pages
+// Ленивая загрузка страниц
 const UserProfilePage = lazy(() => import("./pages/UserProfilePage"));
 const TasksPage = lazy(() => import("./pages/TasksPage"));
 
-// Loading component
+// Компонент загрузки
 const PageLoader = () => (
   <Center style={{ minHeight: "50vh" }}>
     <Loader size="lg" />

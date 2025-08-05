@@ -2,9 +2,10 @@ import { TextInput } from "@mantine/core";
 import { useController, type FieldValues } from "react-hook-form";
 import type { TextInputFieldProps } from "../../types/types-exports";
 
-// minHeight для одной строки ошибки
+// Стили для отображения ошибок валидации
 const errorStyle = { minHeight: 20, color: "red", fontSize: 14, marginTop: 4 };
 
+// Переиспользуемый компонент текстового поля с интеграцией React Hook Form
 export function TextInputField<T extends FieldValues>({
   name,
   control,
@@ -14,6 +15,7 @@ export function TextInputField<T extends FieldValues>({
   rules,
   autoComplete,
 }: TextInputFieldProps<T>) {
+  // Интеграция с React Hook Form для управления состоянием и валидацией
   const {
     field,
     fieldState: { error },
@@ -27,9 +29,10 @@ export function TextInputField<T extends FieldValues>({
         type={type}
         placeholder={placeholder}
         error={!!error}
-        withAsterisk={!!rules?.required}
+        withAsterisk={!!rules?.required} // Показываем звездочку для обязательных полей
         autoComplete={autoComplete}
       />
+      {/* Отображение ошибки валидации */}
       <div style={errorStyle}>{error?.message || ""}</div>
     </div>
   );

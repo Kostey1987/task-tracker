@@ -37,7 +37,7 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
   });
 
-  // Форма логина
+  // Форма входа
   const loginForm = useForm<LoginFormValues>({
     mode: "onTouched",
     defaultValues: { email: "", password: "" },
@@ -84,7 +84,7 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
       value === registerForm.watch("password") || "Пароли не совпадают",
   };
 
-  // Правила валидации для логина
+  // Правила валидации для входа
   const loginEmailRules: RegisterOptions<LoginFormValues> = {
     required: "Email обязателен",
     pattern: {
@@ -112,11 +112,11 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
       setIsLogin(true);
       registerForm.reset();
     } catch (e) {
-      // обработка ошибки
+      // Обработка ошибки
     }
   };
 
-  // Обработчик логина
+  // Обработчик входа
   const onLoginSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
       const result = await login(data).unwrap();
@@ -126,12 +126,12 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
           refreshToken: result.token.refreshToken,
         })
       );
-      // Инвалидируем кэш задач после успешного логина
+      // Инвалидируем кэш задач после успешного входа
       dispatch(api.util.invalidateTags(["Tasks"]));
       onClose();
       navigate("/tasks");
     } catch (e) {
-      // обработка ошибки
+      // Обработка ошибки
     }
   };
 
@@ -177,7 +177,7 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
           }}
         >
           {isLogin ? (
-            // Форма логина
+            // Форма входа
             <form
               key="login-form"
               onSubmit={loginForm.handleSubmit(onLoginSubmit)}

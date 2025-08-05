@@ -6,7 +6,9 @@ import { useRegisterMutation } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
 import type { RegisterFormValues } from "../types/types-exports";
 
+// Страница регистрации нового пользователя
 export default function RegisterPage() {
+  // Форма регистрации с валидацией
   const { control, handleSubmit, watch } = useForm<RegisterFormValues>({
     mode: "onTouched",
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
@@ -14,6 +16,7 @@ export default function RegisterPage() {
   const [registerUser, { isLoading, error }] = useRegisterMutation();
   const navigate = useNavigate();
 
+  // Обработчик отправки формы регистрации
   const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
     try {
       await registerUser({
@@ -21,17 +24,19 @@ export default function RegisterPage() {
         email: data.email,
         password: data.password,
       }).unwrap();
-      navigate("/login");
+      navigate("/login"); // Перенаправляем на страницу входа после успешной регистрации
     } catch (e) {
-      // обработка ошибки
+      // Обработка ошибки регистрации
     }
   };
 
+  // Правила валидации для имени
   const nameRules: RegisterOptions<RegisterFormValues> = {
     required: "Имя обязательно",
     minLength: { value: 2, message: "Имя слишком короткое" },
   };
 
+  // Правила валидации для email
   const emailRules: RegisterOptions<RegisterFormValues> = {
     required: "Email обязателен",
     pattern: {
@@ -40,6 +45,7 @@ export default function RegisterPage() {
     },
   };
 
+  // Правила валидации для пароля
   const passwordRules: RegisterOptions<RegisterFormValues> = {
     required: "Пароль обязателен",
     minLength: {
@@ -48,6 +54,7 @@ export default function RegisterPage() {
     },
   };
 
+  // Правила валидации для подтверждения пароля
   const confirmPasswordRules: RegisterOptions<RegisterFormValues> = {
     required: "Подтверждение пароля обязательно",
     validate: (value) => value === watch("password") || "Пароли не совпадают",

@@ -8,6 +8,7 @@ import { setCredentials } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import type { LoginFormValues } from "../types/types-exports";
 
+// Правила валидации для email
 const emailRules: RegisterOptions<LoginFormValues> = {
   required: "Email обязателен",
   pattern: {
@@ -16,6 +17,7 @@ const emailRules: RegisterOptions<LoginFormValues> = {
   },
 };
 
+// Правила валидации для пароля
 const passwordRules: RegisterOptions<LoginFormValues> = {
   required: "Пароль обязателен",
   minLength: {
@@ -24,7 +26,9 @@ const passwordRules: RegisterOptions<LoginFormValues> = {
   },
 };
 
+// Страница входа в систему
 export default function LoginPage() {
+  // Форма входа с валидацией
   const { control, handleSubmit } = useForm<LoginFormValues>({
     mode: "onTouched",
     defaultValues: { email: "", password: "" },
@@ -33,18 +37,20 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Обработчик отправки формы входа
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
       const result = await login(data).unwrap();
+      // Сохраняем токены в Redux store
       dispatch(
         setCredentials({
           accessToken: result.token.accessToken,
           refreshToken: result.token.refreshToken,
         })
       );
-      navigate("/tasks"); // редирект на страницу задач
+      navigate("/tasks"); // Перенаправляем на страницу задач
     } catch (e) {
-      // обработка ошибки
+      // Обработка ошибки входа
     }
   };
 

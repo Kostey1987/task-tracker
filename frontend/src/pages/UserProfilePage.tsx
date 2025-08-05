@@ -7,15 +7,21 @@ import { useUpdateUserMutation, useGetProfileQuery } from "../services/authApi";
 import { useEffect, useMemo } from "react";
 import type { ProfileFormValues } from "../types/types-exports";
 
+// Правила валидации для имени пользователя
 const nameRules: RegisterOptions<ProfileFormValues> = {
   required: "Имя обязательно",
   minLength: { value: 2, message: "Имя слишком короткое" },
 };
 
+// Страница профиля пользователя
 export default function UserProfilePage() {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+
+  // Получение данных профиля пользователя
   const { data: user, refetch } = useGetProfileQuery();
+
+  // Форма для изменения имени с валидацией
   const {
     control,
     handleSubmit,
@@ -26,25 +32,30 @@ export default function UserProfilePage() {
     mode: "onTouched",
     defaultValues: { name: user?.name || "" },
   });
+
+  // Мутация для обновления имени пользователя
   const [updateUser, { isLoading: isUpdating, error: updateError, isSuccess }] =
     useUpdateUserMutation();
 
+  // Отслеживание изменений имени
   const currentName = watch("name");
   const isNameChanged = useMemo(
     () => currentName !== user?.name,
     [currentName, user?.name]
   );
 
+  // Сброс формы при получении данных пользователя
   useEffect(() => {
     if (user) reset({ name: user.name });
   }, [user, reset]);
 
+  // Обработчик отправки формы обновления имени
   const onSubmit: SubmitHandler<ProfileFormValues> = async (data) => {
     try {
       await updateUser({ newName: data.name }).unwrap();
-      refetch();
+      refetch(); // Обновляем данные профиля
     } catch (e) {
-      // обработка ошибки
+      // Обработка ошибки обновления
     }
   };
 
