@@ -22,14 +22,14 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    if (!req.userId) {
+    if (!(req as any).userId) {
       return res.status(401).json({ error: "User not authenticated" });
     }
     try {
       const taskId = await tasksController.createTask({
         description: req.body.description,
         deadline: req.body.deadline,
-        userId: req.userId,
+        userId: (req as any).userId,
       });
       res.status(201).json({ id: taskId });
     } catch (err: any) {
@@ -40,7 +40,7 @@ router.post(
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    if (!req.userId) throw new Error("User not authenticated");
+    if (!(req as any).userId) throw new Error("User not authenticated");
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const status = req.query.status as string | undefined;
@@ -49,7 +49,7 @@ router.get("/", async (req: Request, res: Response) => {
     const sortDeadline = req.query.sortDeadline as "asc" | "desc" | undefined;
     const search = req.query.search as string | undefined;
     const result = await tasksController.getTasks(
-      req.userId,
+      (req as any).userId,
       page,
       limit,
       status || null,

@@ -69,7 +69,7 @@ router.patch("/update", authMiddleware, async (req: Request, res: Response) => {
 
 // Logout endpoint
 router.post("/logout", authMiddleware, async (req: Request, res: Response) => {
-  await logout(req.userId!);
+  await logout((req as any).userId);
   res.status(200).json({ message: "Logged out" });
 });
 
