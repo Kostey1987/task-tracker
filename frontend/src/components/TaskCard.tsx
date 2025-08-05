@@ -18,7 +18,7 @@ function TaskCardComponent({
   flags = {},
   callbacks = {},
 }: TaskCardProps) {
-  const { id, description = "", status = "В работе", deadline = null } = task;
+  const { description = "", status = "В работе", deadline = null } = task;
   const { isEditing = false, isCreating = false } = flags;
   const { onChange, onDelete, onEditClick, onCancelEdit } = callbacks;
 
