@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import type { UseTaskCardActionsProps } from "../types/types-exports";
 
 export function useTaskCardActions({
-  taskId,
   desc,
   currentStatus,
   deadlineError,

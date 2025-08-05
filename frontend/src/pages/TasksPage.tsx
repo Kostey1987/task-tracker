@@ -47,7 +47,7 @@ function TasksPageComponent() {
 
   // Оптимизированные обработчики
   const handleEditWithTask = useCallback(
-    async (id: number, values: Partial<TaskInput> & { file?: File | null }) => {
+    async (id: number, values: Partial<TaskInput>) => {
       const task = data?.tasks.find((t) => t.id === id);
       if (!task) return;
 
@@ -65,9 +65,7 @@ function TasksPageComponent() {
     [handleDelete, refetchAndNotify]
   );
 
-  const handleImageDeleted = useCallback(() => {
-    refetchAndNotify();
-  }, [refetchAndNotify]);
+
 
   // Состояния загрузки
   if (isLoading) {
@@ -106,7 +104,6 @@ function TasksPageComponent() {
       <TasksPageContent
         data={data as GetTasksResponse}
         handleCreate={handleCreate}
-        handleImageDeleted={handleImageDeleted}
         handleEditWithTask={handleEditWithTask}
         handleDeleteWithRefetch={handleDeleteWithRefetch}
         refetch={refetch}

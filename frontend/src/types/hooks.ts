@@ -22,7 +22,6 @@ export interface UseTaskCardStateProps {
 // useTaskCardActions
 /** Пропсы для хука действий карточки задачи */
 export interface UseTaskCardActionsProps {
-  taskId: number;
   desc: string;
   currentStatus: TaskStatus;
   deadlineError: string | null;

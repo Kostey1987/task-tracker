@@ -12,21 +12,15 @@ export function useTasksActions({ onError }: UseTasksActionsProps = {}) {
   const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
 
   const handleCreate = useCallback(
-    async (values: Partial<TaskInput> & { file?: File | null }) => {
+    async (values: Partial<TaskInput>) => {
       if (!values.description?.trim() || !values.status) return;
 
       try {
-        const taskData: any = {
+        const taskData = {
           description: values.description.trim(),
           status: values.status,
           deadline: values.deadline,
         };
-
-        if (values.file) {
-          taskData.file = values.file;
-        } else if (values.image) {
-          taskData.image = values.image;
-        }
 
         console.log("handleCreate: отправляемые данные:", taskData);
         await createTask(taskData).unwrap();
@@ -41,22 +35,16 @@ export function useTasksActions({ onError }: UseTasksActionsProps = {}) {
   const handleEdit = useCallback(
     async (
       id: number,
-      values: Partial<TaskInput> & { file?: File | null },
+      values: Partial<TaskInput>,
       currentTask?: any
     ) => {
       if (!currentTask) return;
 
-      const updateData: any = {
+      const updateData = {
         description: values.description ?? currentTask.description,
         status: values.status ?? currentTask.status,
         deadline: values.deadline ?? currentTask.deadline,
       };
-
-      if (values.file) {
-        updateData.file = values.file;
-      } else if (values.image) {
-        updateData.image = values.image;
-      }
 
       console.log("handleEdit: отправляемые данные:", updateData);
 
