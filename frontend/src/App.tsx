@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,16 +14,26 @@ import {
   Center,
   Stack,
   useMantineTheme,
+  Loader,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/authSlice";
 import { api } from "./services/api";
-import UserProfilePage from "./pages/UserProfilePage";
-import TasksPage from "./pages/TasksPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import AuthDrawer from "./components/AuthDrawer";
 import type { RootState } from "./types/types-exports";
+
+// Lazy load pages
+const UserProfilePage = lazy(() => import("./pages/UserProfilePage"));
+const TasksPage = lazy(() => import("./pages/TasksPage"));
+
+// Loading component
+const PageLoader = () => (
+  <Center style={{ minHeight: "50vh" }}>
+    <Loader size="lg" />
+  </Center>
+);
 
 function App() {
   const theme = useMantineTheme();
@@ -110,7 +120,9 @@ function App() {
               path="/userProfile"
               element={
                 <ProtectedRoute>
-                  <UserProfilePage />
+                  <Suspense fallback={<PageLoader />}>
+                    <UserProfilePage />
+                  </Suspense>
                 </ProtectedRoute>
               }
             />
@@ -118,7 +130,9 @@ function App() {
               path="/tasks"
               element={
                 <ProtectedRoute>
-                  <TasksPage />
+                  <Suspense fallback={<PageLoader />}>
+                    <TasksPage />
+                  </Suspense>
                 </ProtectedRoute>
               }
             />
