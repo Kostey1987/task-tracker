@@ -49,7 +49,6 @@ function TaskCardComponent({
 
   // Хук для обработки действий
   const { handleSave, handleCreate, handleCancel } = useTaskCardActions({
-    taskId: id,
     desc,
     currentStatus,
     deadlineError,

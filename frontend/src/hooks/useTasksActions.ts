@@ -19,7 +19,7 @@ export function useTasksActions({ onError }: UseTasksActionsProps = {}) {
         const taskData = {
           description: values.description.trim(),
           status: values.status,
-          deadline: values.deadline,
+          deadline: values.deadline || null,
         };
 
         console.log("handleCreate: отправляемые данные:", taskData);
