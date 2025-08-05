@@ -58,9 +58,9 @@ router.post(
 );
 
 // Обновление данных
-router.patch("/update", authMiddleware, async (req: any, res) => {
+router.patch("/update", authMiddleware, async (req: Request, res: Response) => {
   try {
-    await updateUser(req.userId, req.body.newName);
+    await updateUser((req as any).userId, req.body.newName);
     res.json({ message: "User updated" });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -87,9 +87,9 @@ router.post("/refresh", async (req: Request, res: Response) => {
 });
 
 // Профиль пользователя
-router.get("/profile", authMiddleware, async (req: any, res: Response) => {
+router.get("/profile", authMiddleware, async (req: Request, res: Response) => {
   try {
-    const user = await findUserById(req.userId);
+    const user = await findUserById((req as any).userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
 import authRoutes from "./routes/auth.routes";
 import tasksRoutes from "./routes/tasks.routes";
 import { authMiddleware } from "./middlewares/auth.middleware";
@@ -20,7 +19,7 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
       // Разрешаем запросы без origin (например, Postman)
       if (!origin) return callback(null, true);
 
@@ -40,7 +39,7 @@ app.use(
     credentials: true,
   })
 );
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Rate limiting
 const limiter = rateLimit({

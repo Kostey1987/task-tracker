@@ -38,7 +38,7 @@ router.post(
   }
 );
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     if (!req.userId) throw new Error("User not authenticated");
     const page = parseInt(req.query.page as string) || 1;
@@ -96,7 +96,7 @@ router.patch(
   }
 );
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req: Request, res: Response) => {
   try {
     await tasksController.deleteTask(parseInt(req.params.id));
     res.json({ message: "Task deleted" });
