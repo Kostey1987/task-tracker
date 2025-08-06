@@ -18,6 +18,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Совместимость модулей */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
     /* Проверка кода */
     "strict": true,
     "noUnusedLocals": true,
