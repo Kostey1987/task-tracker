@@ -8,6 +8,7 @@ import {
   Flex,
   Center,
   useMantineTheme,
+  Alert,
 } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler, RegisterOptions } from "react-hook-form";
@@ -23,6 +24,7 @@ import type {
   RegisterFormValues,
   LoginFormValues,
 } from "../types/types-exports";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
   const [isLogin, setIsLogin] = useState(false);
@@ -112,7 +114,7 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
       setIsLogin(true);
       registerForm.reset();
     } catch (e) {
-      // Обработка ошибки
+      console.error("Registration error:", e);
     }
   };
 
@@ -131,8 +133,47 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
       onClose();
       navigate("/tasks");
     } catch (e) {
-      // Обработка ошибки
+      console.error("Login error:", e);
     }
+  };
+
+  // Добавляем функции для обработки ошибок
+  const getLoginErrorMessage = (error: any) => {
+    if (!error) return null;
+
+    if ("data" in error) {
+      const errorData = error.data as { message?: string; error?: string };
+
+      switch (errorData.message) {
+        case "USER_NOT_FOUND":
+          return "Пользователь с таким email не найден";
+        case "INVALID_PASSWORD":
+          return "Неверный пароль";
+        default:
+          return errorData.error || "Ошибка при входе в систему";
+      }
+    }
+
+    return "Произошла неизвестная ошибка";
+  };
+
+  const getRegisterErrorMessage = (error: any) => {
+    if (!error) return null;
+
+    if ("data" in error) {
+      const errorData = error.data as { message?: string; error?: string };
+
+      switch (errorData.message) {
+        case "EMAIL_EXISTS":
+          return "Пользователь с таким email уже существует";
+        case "WEAK_PASSWORD":
+          return "Пароль слишком слабый";
+        default:
+          return errorData.error || "Ошибка при регистрации";
+      }
+    }
+
+    return "Произошла неизвестная ошибка";
   };
 
   const handleSwitchMode = () => {
@@ -210,9 +251,19 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
                   Войти
                 </Button>
                 {loginError && (
-                  <Text c="red" ta="center">
-                    Ошибка входа
-                  </Text>
+                  <Alert
+                    icon={<IconAlertCircle size="1rem" />}
+                    title="Ошибка авторизации"
+                    color="red"
+                    mb="md"
+                    withCloseButton
+                    styles={{
+                      root: { borderLeft: "3px solid red" },
+                      title: { fontWeight: 600 },
+                    }}
+                  >
+                    {getLoginErrorMessage(loginError)}
+                  </Alert>
                 )}
                 <Center mt="md">
                   <Button
@@ -272,9 +323,19 @@ export default function AuthDrawer({ opened, onClose }: AuthDrawerProps) {
                   Зарегистрироваться
                 </Button>
                 {registerError && (
-                  <Text c="red" ta="center">
-                    Ошибка регистрации
-                  </Text>
+                  <Alert
+                    icon={<IconAlertCircle size="1rem" />}
+                    title="Ошибка регистрации"
+                    color="red"
+                    mb="md"
+                    withCloseButton
+                    styles={{
+                      root: { borderLeft: "3px solid red" },
+                      title: { fontWeight: 600 },
+                    }}
+                  >
+                    {getRegisterErrorMessage(registerError)}
+                  </Alert>
                 )}
                 <Center mt="md">
                   <Button

@@ -19,14 +19,29 @@ export const register = async (
   email: string,
   password: string
 ) => {
+  const existingUser = await findUserByEmail(email);
+  if (existingUser)
+    throw new Error("Пользователь с таким email уже существует");
   await createUser({ name, email, password });
 };
 
 export const login = async (email: string, password: string) => {
   const user = await findUserByEmail(email);
-  if (!user) throw new Error("User not found");
+  if (!user) {
+    throw {
+      statusCode: 404,
+      message: "USER_NOT_FOUND",
+      error: "Пользователь с таким email не найден",
+    };
+  }
   const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new Error("Invalid credentials");
+  if (!isMatch) {
+    throw {
+      statusCode: 401,
+      message: "INVALID_PASSWORD",
+      error: "Неверный пароль",
+    };
+  }
   const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
     expiresIn: "15m",
   });

@@ -40,8 +40,8 @@ router.post(
 router.post(
   "/login",
   [
-    body("email").isEmail().withMessage("Valid email is required"),
-    body("password").notEmpty().withMessage("Password is required"),
+    body("email").isEmail().withMessage("Введите корректный email"),
+    body("password").notEmpty().withMessage("Введите пароль"),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -49,10 +49,19 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-      const token = await login(req.body.email, req.body.password);
-      res.json({ token });
+      const tokens = await login(req.body.email, req.body.password);
+      res.json({ token: tokens });
     } catch (error: any) {
-      res.status(401).json({ error: error.message });
+      let statusCode = 401;
+      let message = "Authentication failed";
+
+      if (error.message === "USER_NOT_FOUND") {
+        message = "Пользователь с таким email не найден";
+      } else if (error.message === "INVALID_PASSWORD") {
+        message = "Неверный пароль";
+      }
+
+      res.status(statusCode).json({ error: message });
     }
   }
 );

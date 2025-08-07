@@ -22,7 +22,7 @@ jest.mock("dayjs", () => {
   const originalModule = jest.requireActual("dayjs");
   return {
     ...originalModule,
-    default: jest.fn((date) => ({
+    default: jest.fn(() => ({
       format: jest.fn(() => "2024-01-01"),
       isValid: jest.fn(() => true),
       toDate: jest.fn(() => new Date("2024-01-01")),
