@@ -11,6 +11,9 @@ export function useTasksActions({ onError }: UseTasksActionsProps = {}) {
   const [updateTask, { isLoading: isUpdating }] = useUpdateTaskMutation();
   const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
 
+  // Создать задачу через API.
+  // Готовит данные (FormData при наличии файла), валидирует обязательные поля
+  // и пробрасывает ошибки наружу через onError для унифицированного UX.
   const handleCreate = useCallback(
     async (values: Partial<TaskInput> & { file?: File | null }) => {
       if (!values.description?.trim() || !values.status) return;
@@ -38,6 +41,9 @@ export function useTasksActions({ onError }: UseTasksActionsProps = {}) {
     [createTask, onError]
   );
 
+  // Обновить задачу через API.
+  // Дополняет недостающие поля из currentTask, поддерживает FormData для файла,
+  // и передаёт ошибки наружу через onError.
   const handleEdit = useCallback(
     async (
       id: number,
@@ -73,6 +79,7 @@ export function useTasksActions({ onError }: UseTasksActionsProps = {}) {
     [updateTask, onError]
   );
 
+  // Удалить задачу через API с пробросом ошибки наружу.
   const handleDelete = useCallback(
     async (id: number) => {
       try {

@@ -5,10 +5,13 @@ export function useImageHandler({
   initialImage,
   onImageChange,
 }: UseImageHandlerProps) {
+  // Текущее изображение (dataURL) и исходный файл для последующей отправки
   const [currentImage, setCurrentImage] = useState<string | null>(initialImage);
   const [file, setFile] = useState<File | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
 
+  // Обработать выбор файла: базовые валидации типа/размера/разрешения,
+  // загрузка через FileReader и предпросмотр
   const handleFileChange = (newFile: File | null) => {
     setImageError(null);
 
@@ -54,6 +57,7 @@ export function useImageHandler({
     reader.readAsDataURL(newFile);
   };
 
+  // Удалить текущее изображение и очистить ошибки/файл
   const handleRemoveImage = () => {
     setCurrentImage(null);
     setFile(null);
@@ -61,6 +65,7 @@ export function useImageHandler({
     onImageChange?.(null, null);
   };
 
+  // Сброс ошибки предпросмотра/валидации изображения
   const resetImageError = () => {
     setImageError(null);
   };

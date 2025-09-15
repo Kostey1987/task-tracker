@@ -8,13 +8,14 @@ export function useDeadlineHandler({
   isCreating,
   onDeadlineChange,
 }: UseDeadlineHandlerProps) {
-  // Для datetime-local input используем формат YYYY-MM-DDTHH:mm
+  // Хранит ввод для <input type="datetime-local"> в формате YYYY-MM-DDTHH:mm
   const [deadlineInput, setDeadlineInput] = useState(
     initialDeadline ? dayjs(initialDeadline).format("YYYY-MM-DDTHH:mm") : ""
   );
   const [deadlineError, setDeadlineError] = useState<string | null>(null);
 
-  // Сброс дедлайна при изменении режима редактирования
+  // При выходе из режимов редактирования/создания — синхронизировать
+  // локальное поле с исходным значением и очистить ошибки
   useEffect(() => {
     if (!isEditing && !isCreating) {
       setDeadlineInput(
@@ -24,6 +25,7 @@ export function useDeadlineHandler({
     }
   }, [initialDeadline, isEditing, isCreating]);
 
+  // Проверка корректности формата и обязательности
   const validateDeadline = (value: string): string | null => {
     if (!value.trim()) return "Дедлайн обязателен";
     const parsed = dayjs(value, "YYYY-MM-DDTHH:mm", true);
@@ -32,11 +34,13 @@ export function useDeadlineHandler({
     return null;
   };
 
+  // Преобразование в строку для API при условии валидности
   const formatDeadlineForApi = (value: string): string | null => {
     const parsed = dayjs(value, "YYYY-MM-DDTHH:mm", true);
     return parsed.isValid() ? parsed.format("YYYY-MM-DDTHH:mm") : null;
   };
 
+  // Изменение ввода: валидирует, хранит и уведомляет контейнер об изменении
   const handleDeadlineChange = (value: string) => {
     setDeadlineInput(value);
     const error = validateDeadline(value);
@@ -50,10 +54,12 @@ export function useDeadlineHandler({
     }
   };
 
+  // Сброс сообщения об ошибке (например, при отмене)
   const resetDeadlineError = () => {
     setDeadlineError(null);
   };
 
+  // Текущее валидное значение в формате API, либо null
   const getFormattedDeadlineForApi = (): string | null => {
     return formatDeadlineForApi(deadlineInput);
   };

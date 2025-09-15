@@ -8,10 +8,11 @@ export function useTaskCardState({
   isCreating,
   onStateChange,
 }: UseTaskCardStateProps) {
+  // Локальное, контролируемое состояние полей карточки (описание и статус)
   const [desc, setDesc] = useState(initialDescription);
   const [currentStatus, setCurrentStatus] = useState<TaskStatus>(initialStatus);
 
-  // Сброс состояния при изменении режима редактирования
+  // При выходе из режимов редактирования/создания — восстановить значения
   useEffect(() => {
     if (!isEditing && !isCreating) {
       setDesc(initialDescription);
@@ -19,6 +20,7 @@ export function useTaskCardState({
     }
   }, [initialDescription, initialStatus, isEditing, isCreating]);
 
+  // Обновление описания
   const handleDescriptionChange = useCallback(
     (newDescription: string) => {
       setDesc(newDescription);
@@ -27,6 +29,7 @@ export function useTaskCardState({
     [currentStatus, onStateChange]
   );
 
+  // Обновление статуса
   const handleStatusChange = useCallback(
     (newStatus: TaskStatus) => {
       setCurrentStatus(newStatus);
@@ -35,6 +38,7 @@ export function useTaskCardState({
     [desc, onStateChange]
   );
 
+  // Полный сброс к исходным значениям
   const resetState = useCallback(() => {
     setDesc(initialDescription);
     setCurrentStatus(initialStatus);

@@ -5,6 +5,7 @@ export function useTasksPageContent({
   data,
   search,
 }: UseTasksPageContentProps) {
+  // Сообщение для пустого списка в зависимости от наличия поискового запроса
   const emptyMessage = useMemo(() => {
     if (search) {
       return `Задачи по запросу "${search}" не найдены`;
@@ -12,6 +13,7 @@ export function useTasksPageContent({
     return "Нет задач";
   }, [search]);
 
+  // Быстрые производные флаги для рендера контента и пагинации
   const hasTasks = useMemo(() => {
     return Boolean(data?.tasks.length);
   }, [data?.tasks.length]);

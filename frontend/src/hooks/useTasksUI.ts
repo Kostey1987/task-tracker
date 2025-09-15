@@ -11,11 +11,14 @@ import {
 } from "../store/tasksUISlice";
 import type { RootState, TaskStatus } from "../types/types-exports";
 
+// Хук-адаптер между Redux-слайсом UI задач и компонентами.
+// Возвращает снимок состояния UI и набор обработчиков, инкапсулируя dispatch.
 export function useTasksUI() {
   const dispatch = useDispatch();
   const tasksUI = useSelector((state: RootState) => state.tasksUI);
 
-  // Debounce для поиска
+  // Debounce для поиска: переносим значение из searchInput в search
+  // (фиксируем запрос) спустя 500 мс бездействия; страница сбрасывается в слайсе
   useEffect(() => {
     const timer = setTimeout(() => {
       if (tasksUI.searchInput !== tasksUI.search) {
@@ -26,6 +29,7 @@ export function useTasksUI() {
     return () => clearTimeout(timer);
   }, [tasksUI.searchInput, tasksUI.search, dispatch]);
 
+  // Смена статуса фильтра задач
   const handleStatusChange = useCallback(
     (newStatus: TaskStatus | null) => {
       dispatch(setStatus(newStatus));
@@ -33,6 +37,7 @@ export function useTasksUI() {
     [dispatch]
   );
 
+  // Смена сортировки по дедлайну
   const handleSortChange = useCallback(
     (newSort: "asc" | "desc") => {
       dispatch(setSortDeadline(newSort));
@@ -40,6 +45,7 @@ export function useTasksUI() {
     [dispatch]
   );
 
+  // Изменение текстового ввода поиска (debounce применится выше)
   const handleSearchChange = useCallback(
     (newSearch: string) => {
       dispatch(setSearchInput(newSearch));
@@ -47,6 +53,7 @@ export function useTasksUI() {
     [dispatch]
   );
 
+  // Переход на другую страницу
   const handlePageChange = useCallback(
     (newPage: number) => {
       dispatch(setPage(newPage));
@@ -54,6 +61,7 @@ export function useTasksUI() {
     [dispatch]
   );
 
+  // Включить/выключить режим создания карточки
   const handleCreateCardToggle = useCallback(
     (isCreating: boolean) => {
       dispatch(setCreatingCard(isCreating));
@@ -61,6 +69,7 @@ export function useTasksUI() {
     [dispatch]
   );
 
+  // Установить id редактируемой карточки (или null, чтобы выйти из режима)
   const handleEditIdChange = useCallback(
     (id: number | null) => {
       dispatch(setEditingId(id));
@@ -69,7 +78,7 @@ export function useTasksUI() {
   );
 
   return {
-    // Состояние
+    // Состояние UI задач из Redux
     page: tasksUI.page,
     status: tasksUI.status,
     searchInput: tasksUI.searchInput,
@@ -80,7 +89,7 @@ export function useTasksUI() {
     isSearching: tasksUI.isSearching,
     lastUpdated: tasksUI.lastUpdated,
 
-    // Обработчики
+    // Обработчики действий UI
     handleStatusChange,
     handleSortChange,
     handleSearchChange,
